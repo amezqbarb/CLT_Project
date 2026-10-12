@@ -1,0 +1,2393 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Barbara Amezquita">
+
+<title>Exponential Population</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="exponential_files/libs/clipboard/clipboard.min.js"></script>
+<script src="exponential_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="exponential_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="exponential_files/libs/quarto-html/popper.min.js"></script>
+<script src="exponential_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="exponential_files/libs/quarto-html/anchor.min.js"></script>
+<link href="exponential_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="exponential_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="exponential_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="exponential_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="exponential_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exponential Population</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Barbara Amezquita </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="research-question" class="level2">
+<h2 class="anchored" data-anchor-id="research-question">Research Question</h2>
+<p>How large does the sample size (n) need to be for the sampling distribution of the mean from an exponential population to become normal enough?</p>
+</section>
+<section id="theoretical-expectations" class="level2">
+<h2 class="anchored" data-anchor-id="theoretical-expectations">Theoretical Expectations</h2>
+<p>I will use an exponential population with rate parameter <span class="math inline">\(\lambda = 1\)</span>.</p>
+<p>For an exponential population with rate <span class="math inline">\(\lambda = 1\)</span>, the population has a mean of 1 and a standard deviation of 1. It is strongly right-skewed, meaning that most values are closer to zero while a smaller number of values extend farther to the right. Its excess kurtosis is 6, which shows that it has heavier tails and more extreme values than a normal distribution.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>population_rate <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>population_mean <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> population_rate</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>population_variance <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> population_rate<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>population_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(population_variance)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>population_skewness <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>population_excess_kurtosis <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>theoretical_values <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">rate =</span> population_rate,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> population_mean,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">variance =</span> population_variance,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_deviation =</span> population_sd,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">skewness =</span> population_skewness,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">excess_kurtosis =</span> population_excess_kurtosis</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  theoretical_values,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Theoretical Values for the Exponential Population"</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Theoretical Values for the Exponential Population</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">variance</th>
+<th style="text-align: right;">standard_deviation</th>
+<th style="text-align: right;">skewness</th>
+<th style="text-align: right;">excess_kurtosis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The theoretical standard error is:</p>
+<p><span class="math display">\[
+\operatorname{SE}(\overline{X})
+=
+\frac{\sigma}{\sqrt{n}}
+=
+\frac{1}{\sqrt{n}}.
+\]</span></p>
+</section>
+<section id="prediction-for-the-exponential-population" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-for-the-exponential-population">Prediction for the Exponential Population</h2>
+<p>The original exponential population is strongly right-skewed and does not have a bell-shaped distribution. I expect the sampling distribution of the mean to become more symmetric and approximately normal as (n) increases.</p>
+<p>Because the exponential population is more skewed and has heavier tails than a normal population, I expect it to require a larger sample size before the sampling distribution looks normal enough. I also expect the simulated standard error to become closer to the theoretical standard error as (n) increases.</p>
+</section>
+<section id="original-population-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="original-population-distribution">Original Population Distribution</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dexp</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    x,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rate =</span> population_rate</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="dv">0</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> <span class="dv">6</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"blue"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Population Distribution of an Exponential Random Variable"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Population value"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Density"</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="exponential_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The original population is strongly right-skewed. The highest density is near zero, and the curve gradually decreases as the population values increase. The long right tail represents occasional larger observations.</p>
+</section>
+<section id="reproducible-simulation-setup" class="level2">
+<h2 class="anchored" data-anchor-id="reproducible-simulation-setup">Reproducible Simulation Setup</h2>
+<p>The last four digits of my student ID are 4160.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>student_id <span class="ot">&lt;-</span> <span class="dv">4160</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>reps <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>broad_n_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">100</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>exponential_generator <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rexp</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    n,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">rate =</span> population_rate</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>simulate_means <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">reps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replicate</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    reps,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(<span class="fu">exponential_generator</span>(n))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>run_simulations <span class="ot">&lt;-</span> <span class="cf">function</span>(n_values, <span class="at">reps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> n_values) {</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Running simulation for n ="</span>, n, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    results[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]] <span class="ot">&lt;-</span> <span class="fu">simulate_means</span>(</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> n,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">reps =</span> reps</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  results</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Here, (n) is the number of exponential observations in one sample. The value <code>reps</code> is the number of repeated samples used to create the sampling distribution.</p>
+</section>
+<section id="broad-range-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-simulations">Broad-Range Simulations</h2>
+<p>The seed is reset immediately before running the simulations so that the results are reproducible.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(student_id)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>broad_means <span class="ot">&lt;-</span> <span class="fu">run_simulations</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> broad_n_values,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">reps =</span> reps</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running simulation for n = 1 
+Running simulation for n = 5 
+Running simulation for n = 10 
+Running simulation for n = 20 
+Running simulation for n = 30 
+Running simulation for n = 50 
+Running simulation for n = 75 
+Running simulation for n = 100 </code></pre>
+</div>
+</div>
+<p>Each value of (n) produces 10,000 simulated sample means.</p>
+</section>
+<section id="checking-the-number-of-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="checking-the-number-of-simulations">Checking the Number of Simulations</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>broad_simulation_check <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_size_n =</span> broad_n_values,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">number_of_sample_means =</span> <span class="fu">sapply</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    broad_means,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    length</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  broad_simulation_check,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">0</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Broad-Range Simulation Counts"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Broad-Range Simulation Counts</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">number_of_sample_means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_20</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_75</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_100</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">10000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Each sample size has the same number of simulated sample means, so the simulations were completed as expected.</p>
+</section>
+<section id="saving-the-broad-range-sample-means" class="level2">
+<h2 class="anchored" data-anchor-id="saving-the-broad-range-sample-means">Saving the Broad-Range Sample Means</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>convert_to_long_format <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  means_list,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  n_values,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  range_label</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    rbind,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lapply</span>(<span class="fu">seq_along</span>(n_values), <span class="cf">function</span>(i) {</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">range =</span> range_label,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">sample_size_n =</span> n_values[i],</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">repetition =</span> <span class="fu">seq_len</span>(<span class="fu">length</span>(means_list[[i]])),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">sample_mean =</span> means_list[[i]]</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>broad_means_long <span class="ot">&lt;-</span> <span class="fu">convert_to_long_format</span>(</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> broad_means,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> broad_n_values,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">range_label =</span> <span class="st">"broad"</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  broad_means_long,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"exponential_broad_sample_means.csv"</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="diagnostic-functions" class="level2">
+<h2 class="anchored" data-anchor-id="diagnostic-functions">Diagnostic Functions</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>calculate_skewness <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x))<span class="sc">^</span><span class="dv">3</span>) <span class="sc">/</span> <span class="fu">sd</span>(x)<span class="sc">^</span><span class="dv">3</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>calculate_excess_kurtosis <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x))<span class="sc">^</span><span class="dv">4</span>) <span class="sc">/</span> <span class="fu">sd</span>(x)<span class="sc">^</span><span class="dv">4</span> <span class="sc">-</span> <span class="dv">3</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>calculate_outliers <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.25</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.75</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  iqr_value <span class="ot">&lt;-</span> q3 <span class="sc">-</span> q1</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">&lt;</span> q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr_value <span class="sc">|</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>      x <span class="sc">&gt;</span> q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr_value</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>calculate_diagnostics <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  means_list,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  n_values</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>) {</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  simulated_means <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    mean</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  simulated_standard_errors <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    sd</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  theoretical_standard_errors <span class="ot">&lt;-</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    population_sd <span class="sc">/</span> <span class="fu">sqrt</span>(n_values)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  tail_proportions <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">seq_along</span>(n_values),</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(i) {</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">abs</span>(</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>          means_list[[i]] <span class="sc">-</span> population_mean</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">&gt;</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>          <span class="dv">3</span> <span class="sc">*</span> theoretical_standard_errors[i]</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_size_n =</span> n_values,</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">simulated_mean =</span> simulated_means,</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">theoretical_mean =</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rep</span>(population_mean, <span class="fu">length</span>(n_values)),</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_error =</span></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>      simulated_means <span class="sc">-</span> population_mean,</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">simulated_standard_error =</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>      simulated_standard_errors,</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">theoretical_standard_error =</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>      theoretical_standard_errors,</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">relative_standard_error_error =</span></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>      <span class="fu">abs</span>(</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>        simulated_standard_errors <span class="sc">-</span></span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>          theoretical_standard_errors</span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">/</span> theoretical_standard_errors,</span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">skewness =</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>      means_list,</span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>      calculate_skewness</span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">excess_kurtosis =</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>      means_list,</span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>      calculate_excess_kurtosis</span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">outlier_count =</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>      means_list,</span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>      calculate_outliers</span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">proportion_beyond_three_theoretical_SE =</span></span>
+<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>      tail_proportions</span>
+<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>  results</span>
+<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="broad-range-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-diagnostics">Broad-Range Diagnostics</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>broad_diagnostics <span class="ot">&lt;-</span> <span class="fu">calculate_diagnostics</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> broad_means,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> broad_n_values</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Broad-Range Diagnostic Results"</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Broad-Range Diagnostic Results</caption>
+<colgroup>
+<col style="width: 2%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">simulated_mean</th>
+<th style="text-align: right;">theoretical_mean</th>
+<th style="text-align: right;">mean_error</th>
+<th style="text-align: right;">simulated_standard_error</th>
+<th style="text-align: right;">theoretical_standard_error</th>
+<th style="text-align: right;">relative_standard_error_error</th>
+<th style="text-align: right;">skewness</th>
+<th style="text-align: right;">excess_kurtosis</th>
+<th style="text-align: right;">outlier_count</th>
+<th style="text-align: right;">proportion_beyond_three_theoretical_SE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.9909</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0091</td>
+<td style="text-align: right;">1.0017</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.0017</td>
+<td style="text-align: right;">2.0819</td>
+<td style="text-align: right;">6.6309</td>
+<td style="text-align: right;">488</td>
+<td style="text-align: right;">0.0182</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.0107</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0107</td>
+<td style="text-align: right;">0.4570</td>
+<td style="text-align: right;">0.4472</td>
+<td style="text-align: right;">0.0219</td>
+<td style="text-align: right;">0.8899</td>
+<td style="text-align: right;">1.1717</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">0.0106</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1.0019</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0019</td>
+<td style="text-align: right;">0.3128</td>
+<td style="text-align: right;">0.3162</td>
+<td style="text-align: right;">0.0109</td>
+<td style="text-align: right;">0.6231</td>
+<td style="text-align: right;">0.6481</td>
+<td style="text-align: right;">132</td>
+<td style="text-align: right;">0.0070</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_20</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.9962</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0038</td>
+<td style="text-align: right;">0.2240</td>
+<td style="text-align: right;">0.2236</td>
+<td style="text-align: right;">0.0016</td>
+<td style="text-align: right;">0.4995</td>
+<td style="text-align: right;">0.4299</td>
+<td style="text-align: right;">111</td>
+<td style="text-align: right;">0.0044</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1.0027</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0027</td>
+<td style="text-align: right;">0.1837</td>
+<td style="text-align: right;">0.1826</td>
+<td style="text-align: right;">0.0063</td>
+<td style="text-align: right;">0.3861</td>
+<td style="text-align: right;">0.1846</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.0049</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">1.0002</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.1412</td>
+<td style="text-align: right;">0.1414</td>
+<td style="text-align: right;">0.0017</td>
+<td style="text-align: right;">0.2559</td>
+<td style="text-align: right;">0.0840</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">0.0033</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_75</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">1.0032</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0032</td>
+<td style="text-align: right;">0.1152</td>
+<td style="text-align: right;">0.1155</td>
+<td style="text-align: right;">0.0024</td>
+<td style="text-align: right;">0.2233</td>
+<td style="text-align: right;">0.1102</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">0.0037</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_100</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.9980</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0020</td>
+<td style="text-align: right;">0.0997</td>
+<td style="text-align: right;">0.1000</td>
+<td style="text-align: right;">0.0032</td>
+<td style="text-align: right;">0.1869</td>
+<td style="text-align: right;">0.0590</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">0.0032</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This table allows me to compare the simulated mean, standard error, skewness, kurtosis, outliers, and tail behavior across the different sample sizes.</p>
+<p>As (n) increases, the simulated mean should remain close to the theoretical mean of 1. The simulated standard error should also become close to the theoretical standard error. The skewness and excess kurtosis should generally move closer to zero as the sampling distributions become more normal.</p>
+</section>
+<section id="broad-range-histograms" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-histograms">Broad-Range Histograms</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>broad_histogram_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">100</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> broad_histogram_values) {</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> broad_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="dv">40</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Sampling Distribution, n ="</span>, n),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Sample mean"</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">border =</span> <span class="st">"white"</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dnorm</span>(</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>      x,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean =</span> population_mean,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">sd =</span> population_sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="exponential_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For smaller values of (n), the sampling distributions are still right-skewed because the original exponential population is strongly right-skewed. As (n) increases, the distributions become more symmetric and more bell-shaped.</p>
+<p>The red curve shows the normal distribution with the theoretical mean and standard error for each value of (n). The histograms should become closer to the red curve as the sample size increases.</p>
+</section>
+<section id="broad-range-normal-q-q-plots" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-normal-q-q-plots">Broad-Range Normal Q-Q Plots</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> broad_histogram_values) {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> broad_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Normal Q-Q Plot, n ="</span>, n)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="exponential_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For smaller values of (n), the points are expected to curve away from the red line because the sampling distribution is still affected by the right-skewed exponential population.</p>
+<p>As (n) increases, the points should follow the red line more closely. This indicates that the sampling distribution is becoming more similar to a normal distribution.</p>
+</section>
+<section id="broad-range-standard-error-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-standard-error-comparison">Broad-Range Standard-Error Comparison</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>sample_size_n,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>simulated_standard_error,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"b"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">log =</span> <span class="st">"x"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Standard deviation of sample means"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Broad-Range Standard-Error Comparison"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>sample_size_n,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>theoretical_standard_error,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"b"</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">17</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"topright"</span>,</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">c</span>(</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Simulated standard error"</span>,</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Theoretical standard error"</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>),</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="dv">17</span>),</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">lty =</span> <span class="dv">1</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="exponential_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The simulated standard errors should generally follow the theoretical curve. The theoretical standard error decreases as (n) increases because averaging more observations reduces the spread of the sample means.</p>
+</section>
+<section id="choosing-the-refinement-interval" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-refinement-interval">Choosing the Refinement Interval</h2>
+<p>After examining the broad-range results, I selected two sample sizes that bracketed the transition to approximately normal behavior.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>refinement_lower <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>refinement_upper <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>refined_n_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  refinement_lower,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  refinement_upper,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="dv">1</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>refined_n_values</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50</code></pre>
+</div>
+</div>
+<p>I selected this interval because the lower boundary still showed some evidence of skewness, while the upper boundary appeared more symmetric and closer to normal. Testing every integer between these boundaries allows me to identify the smallest sample size that looks normal enough.</p>
+</section>
+<section id="fine-grained-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-simulations">Fine-Grained Simulations</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(student_id)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>refined_means <span class="ot">&lt;-</span> <span class="fu">run_simulations</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> refined_n_values,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">reps =</span> reps</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running simulation for n = 30 
+Running simulation for n = 31 
+Running simulation for n = 32 
+Running simulation for n = 33 
+Running simulation for n = 34 
+Running simulation for n = 35 
+Running simulation for n = 36 
+Running simulation for n = 37 
+Running simulation for n = 38 
+Running simulation for n = 39 
+Running simulation for n = 40 
+Running simulation for n = 41 
+Running simulation for n = 42 
+Running simulation for n = 43 
+Running simulation for n = 44 
+Running simulation for n = 45 
+Running simulation for n = 46 
+Running simulation for n = 47 
+Running simulation for n = 48 
+Running simulation for n = 49 
+Running simulation for n = 50 </code></pre>
+</div>
+</div>
+<p>This tests every integer sample size between the two selected boundaries.</p>
+</section>
+<section id="fine-grained-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-diagnostics">Fine-Grained Diagnostics</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>refined_diagnostics <span class="ot">&lt;-</span> <span class="fu">calculate_diagnostics</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> refined_means,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> refined_n_values</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Fine-Grained Diagnostic Results"</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Fine-Grained Diagnostic Results</caption>
+<colgroup>
+<col style="width: 2%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">simulated_mean</th>
+<th style="text-align: right;">theoretical_mean</th>
+<th style="text-align: right;">mean_error</th>
+<th style="text-align: right;">simulated_standard_error</th>
+<th style="text-align: right;">theoretical_standard_error</th>
+<th style="text-align: right;">relative_standard_error_error</th>
+<th style="text-align: right;">skewness</th>
+<th style="text-align: right;">excess_kurtosis</th>
+<th style="text-align: right;">outlier_count</th>
+<th style="text-align: right;">proportion_beyond_three_theoretical_SE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1.0002</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.1846</td>
+<td style="text-align: right;">0.1826</td>
+<td style="text-align: right;">0.0112</td>
+<td style="text-align: right;">0.3852</td>
+<td style="text-align: right;">0.2063</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">0.0045</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_31</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">1.0024</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0024</td>
+<td style="text-align: right;">0.1808</td>
+<td style="text-align: right;">0.1796</td>
+<td style="text-align: right;">0.0066</td>
+<td style="text-align: right;">0.3671</td>
+<td style="text-align: right;">0.1606</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">0.0046</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_32</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">1.0004</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0004</td>
+<td style="text-align: right;">0.1774</td>
+<td style="text-align: right;">0.1768</td>
+<td style="text-align: right;">0.0035</td>
+<td style="text-align: right;">0.4055</td>
+<td style="text-align: right;">0.4171</td>
+<td style="text-align: right;">119</td>
+<td style="text-align: right;">0.0050</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_33</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">0.9987</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0013</td>
+<td style="text-align: right;">0.1749</td>
+<td style="text-align: right;">0.1741</td>
+<td style="text-align: right;">0.0048</td>
+<td style="text-align: right;">0.3300</td>
+<td style="text-align: right;">0.1030</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.0035</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_34</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">1.0034</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.1714</td>
+<td style="text-align: right;">0.1715</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">0.3832</td>
+<td style="text-align: right;">0.3179</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">0.0039</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_35</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">1.0041</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0041</td>
+<td style="text-align: right;">0.1699</td>
+<td style="text-align: right;">0.1690</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">0.3122</td>
+<td style="text-align: right;">0.0980</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">0.0044</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_36</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">0.9984</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0016</td>
+<td style="text-align: right;">0.1665</td>
+<td style="text-align: right;">0.1667</td>
+<td style="text-align: right;">0.0009</td>
+<td style="text-align: right;">0.3625</td>
+<td style="text-align: right;">0.2549</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">0.0042</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_37</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">0.9953</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0047</td>
+<td style="text-align: right;">0.1633</td>
+<td style="text-align: right;">0.1644</td>
+<td style="text-align: right;">0.0065</td>
+<td style="text-align: right;">0.3378</td>
+<td style="text-align: right;">0.2313</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">0.0039</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_38</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">1.0010</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0010</td>
+<td style="text-align: right;">0.1620</td>
+<td style="text-align: right;">0.1622</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.3053</td>
+<td style="text-align: right;">0.1599</td>
+<td style="text-align: right;">101</td>
+<td style="text-align: right;">0.0043</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_39</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">0.9998</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0002</td>
+<td style="text-align: right;">0.1609</td>
+<td style="text-align: right;">0.1601</td>
+<td style="text-align: right;">0.0049</td>
+<td style="text-align: right;">0.2363</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">0.0020</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_40</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0.9991</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0009</td>
+<td style="text-align: right;">0.1570</td>
+<td style="text-align: right;">0.1581</td>
+<td style="text-align: right;">0.0073</td>
+<td style="text-align: right;">0.2570</td>
+<td style="text-align: right;">0.0135</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">0.0030</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_41</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">1.0014</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.1560</td>
+<td style="text-align: right;">0.1562</td>
+<td style="text-align: right;">0.0010</td>
+<td style="text-align: right;">0.3858</td>
+<td style="text-align: right;">0.3310</td>
+<td style="text-align: right;">102</td>
+<td style="text-align: right;">0.0045</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_42</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">0.9978</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0022</td>
+<td style="text-align: right;">0.1544</td>
+<td style="text-align: right;">0.1543</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">0.3198</td>
+<td style="text-align: right;">0.1314</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">0.0042</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_43</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">1.0029</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0029</td>
+<td style="text-align: right;">0.1509</td>
+<td style="text-align: right;">0.1525</td>
+<td style="text-align: right;">0.0105</td>
+<td style="text-align: right;">0.2261</td>
+<td style="text-align: right;">0.0630</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">0.0037</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_44</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">1.0034</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.1512</td>
+<td style="text-align: right;">0.1508</td>
+<td style="text-align: right;">0.0030</td>
+<td style="text-align: right;">0.2986</td>
+<td style="text-align: right;">0.0732</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">0.0039</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_45</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">1.0007</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">0.1488</td>
+<td style="text-align: right;">0.1491</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">0.2503</td>
+<td style="text-align: right;">0.1370</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">0.0043</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_46</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">0.9996</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0004</td>
+<td style="text-align: right;">0.1475</td>
+<td style="text-align: right;">0.1474</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">0.2977</td>
+<td style="text-align: right;">0.1819</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">0.0041</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_47</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">1.0002</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.1446</td>
+<td style="text-align: right;">0.1459</td>
+<td style="text-align: right;">0.0088</td>
+<td style="text-align: right;">0.2717</td>
+<td style="text-align: right;">0.0486</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">0.0029</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_48</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">1.0026</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;">0.1446</td>
+<td style="text-align: right;">0.1443</td>
+<td style="text-align: right;">0.0017</td>
+<td style="text-align: right;">0.3111</td>
+<td style="text-align: right;">0.2656</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">0.0047</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_49</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">1.0015</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0015</td>
+<td style="text-align: right;">0.1430</td>
+<td style="text-align: right;">0.1429</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">0.3283</td>
+<td style="text-align: right;">0.2262</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">0.0042</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.9986</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0014</td>
+<td style="text-align: right;">0.1411</td>
+<td style="text-align: right;">0.1414</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;">0.2491</td>
+<td style="text-align: right;">-0.0427</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">0.0028</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="comparing-refined-sample-sizes" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-refined-sample-sizes">Comparing Refined Sample Sizes</h2>
+<p>The goal is to select the smallest sample size that appears normal enough. The numerical criteria are used as supporting evidence.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>qq_correlations <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(refined_n_values)) {</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> refined_n_values[i]</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> refined_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  probabilities <span class="ot">&lt;-</span> (</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(means)) <span class="sc">-</span> <span class="fl">0.5</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">/</span> <span class="fu">length</span>(means)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  theoretical_quantiles <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    probabilities</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  qq_correlations[i] <span class="ot">&lt;-</span> <span class="fu">cor</span>(</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sort</span>(means),</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    theoretical_quantiles</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>absolute_mean_error <span class="ot">&lt;-</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(refined_diagnostics<span class="sc">$</span>mean_error)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>absolute_standard_error_error <span class="ot">&lt;-</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    refined_diagnostics<span class="sc">$</span>simulated_standard_error <span class="sc">-</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>      refined_diagnostics<span class="sc">$</span>theoretical_standard_error</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>qq_correlation <span class="ot">&lt;-</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>  qq_correlations</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>mean_error_rank <span class="ot">&lt;-</span> <span class="fu">rank</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics<span class="sc">$</span>absolute_mean_error,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ties.method =</span> <span class="st">"min"</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>standard_error_rank <span class="ot">&lt;-</span> <span class="fu">rank</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics<span class="sc">$</span>absolute_standard_error_error,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ties.method =</span> <span class="st">"min"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>qq_rank <span class="ot">&lt;-</span> <span class="fu">rank</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>refined_diagnostics<span class="sc">$</span>qq_correlation,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ties.method =</span> <span class="st">"min"</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>total_score <span class="ot">&lt;-</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics<span class="sc">$</span>mean_error_rank <span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    refined_diagnostics<span class="sc">$</span>standard_error_rank <span class="sc">+</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    refined_diagnostics<span class="sc">$</span>qq_rank</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The following criteria identify the smallest sample size that is normal enough based on the numerical diagnostics.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>normal_enough_rows <span class="ot">&lt;-</span> refined_diagnostics[</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(refined_diagnostics<span class="sc">$</span>skewness) <span class="sc">&lt;</span> <span class="fl">0.25</span> <span class="sc">&amp;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>(refined_diagnostics<span class="sc">$</span>excess_kurtosis) <span class="sc">&lt;</span> <span class="fl">0.50</span> <span class="sc">&amp;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    refined_diagnostics<span class="sc">$</span>relative_standard_error_error <span class="sc">&lt;</span> <span class="fl">0.05</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(normal_enough_rows) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  selected_n <span class="ot">&lt;-</span> <span class="fu">min</span>(</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    normal_enough_rows<span class="sc">$</span>sample_size_n</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  selected_n <span class="ot">&lt;-</span> refined_n_values[</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">which.min</span>(refined_diagnostics<span class="sc">$</span>total_score)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"No sample size met every numerical criterion."</span>,</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"The lowest-scoring sample size was selected for visual review."</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>selected_n</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 39</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>comparison_table <span class="ot">&lt;-</span> refined_diagnostics[</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(refined_diagnostics<span class="sc">$</span>sample_size_n),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  comparison_table,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Comparison of Refined Sample Sizes"</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Comparison of Refined Sample Sizes</caption>
+<colgroup>
+<col style="width: 1%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 2%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 11%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 2%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">simulated_mean</th>
+<th style="text-align: right;">theoretical_mean</th>
+<th style="text-align: right;">mean_error</th>
+<th style="text-align: right;">simulated_standard_error</th>
+<th style="text-align: right;">theoretical_standard_error</th>
+<th style="text-align: right;">relative_standard_error_error</th>
+<th style="text-align: right;">skewness</th>
+<th style="text-align: right;">excess_kurtosis</th>
+<th style="text-align: right;">outlier_count</th>
+<th style="text-align: right;">proportion_beyond_three_theoretical_SE</th>
+<th style="text-align: right;">absolute_mean_error</th>
+<th style="text-align: right;">absolute_standard_error_error</th>
+<th style="text-align: right;">qq_correlation</th>
+<th style="text-align: right;">mean_error_rank</th>
+<th style="text-align: right;">standard_error_rank</th>
+<th style="text-align: right;">qq_rank</th>
+<th style="text-align: right;">total_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1.0002</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.1846</td>
+<td style="text-align: right;">0.1826</td>
+<td style="text-align: right;">0.0112</td>
+<td style="text-align: right;">0.3852</td>
+<td style="text-align: right;">0.2063</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">0.0045</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">0.9958</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">44</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_31</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">1.0024</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0024</td>
+<td style="text-align: right;">0.1808</td>
+<td style="text-align: right;">0.1796</td>
+<td style="text-align: right;">0.0066</td>
+<td style="text-align: right;">0.3671</td>
+<td style="text-align: right;">0.1606</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">0.0046</td>
+<td style="text-align: right;">0.0024</td>
+<td style="text-align: right;">0.0012</td>
+<td style="text-align: right;">0.9961</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_32</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">1.0004</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0004</td>
+<td style="text-align: right;">0.1774</td>
+<td style="text-align: right;">0.1768</td>
+<td style="text-align: right;">0.0035</td>
+<td style="text-align: right;">0.4055</td>
+<td style="text-align: right;">0.4171</td>
+<td style="text-align: right;">119</td>
+<td style="text-align: right;">0.0050</td>
+<td style="text-align: right;">0.0004</td>
+<td style="text-align: right;">0.0006</td>
+<td style="text-align: right;">0.9956</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_33</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">0.9987</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0013</td>
+<td style="text-align: right;">0.1749</td>
+<td style="text-align: right;">0.1741</td>
+<td style="text-align: right;">0.0048</td>
+<td style="text-align: right;">0.3300</td>
+<td style="text-align: right;">0.1030</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.0035</td>
+<td style="text-align: right;">0.0013</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">0.9968</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_34</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">1.0034</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.1714</td>
+<td style="text-align: right;">0.1715</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">0.3832</td>
+<td style="text-align: right;">0.3179</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">0.0039</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">0.9959</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">42</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_35</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">1.0041</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0041</td>
+<td style="text-align: right;">0.1699</td>
+<td style="text-align: right;">0.1690</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">0.3122</td>
+<td style="text-align: right;">0.0980</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">0.0044</td>
+<td style="text-align: right;">0.0041</td>
+<td style="text-align: right;">0.0009</td>
+<td style="text-align: right;">0.9972</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">46</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_36</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">0.9984</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0016</td>
+<td style="text-align: right;">0.1665</td>
+<td style="text-align: right;">0.1667</td>
+<td style="text-align: right;">0.0009</td>
+<td style="text-align: right;">0.3625</td>
+<td style="text-align: right;">0.2549</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">0.0042</td>
+<td style="text-align: right;">0.0016</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.9964</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_37</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">0.9953</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0047</td>
+<td style="text-align: right;">0.1633</td>
+<td style="text-align: right;">0.1644</td>
+<td style="text-align: right;">0.0065</td>
+<td style="text-align: right;">0.3378</td>
+<td style="text-align: right;">0.2313</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">0.0039</td>
+<td style="text-align: right;">0.0047</td>
+<td style="text-align: right;">0.0011</td>
+<td style="text-align: right;">0.9968</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_38</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">1.0010</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0010</td>
+<td style="text-align: right;">0.1620</td>
+<td style="text-align: right;">0.1622</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.3053</td>
+<td style="text-align: right;">0.1599</td>
+<td style="text-align: right;">101</td>
+<td style="text-align: right;">0.0043</td>
+<td style="text-align: right;">0.0010</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.9974</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_39</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">0.9998</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0002</td>
+<td style="text-align: right;">0.1609</td>
+<td style="text-align: right;">0.1601</td>
+<td style="text-align: right;">0.0049</td>
+<td style="text-align: right;">0.2363</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">0.9982</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_40</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0.9991</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0009</td>
+<td style="text-align: right;">0.1570</td>
+<td style="text-align: right;">0.1581</td>
+<td style="text-align: right;">0.0073</td>
+<td style="text-align: right;">0.2570</td>
+<td style="text-align: right;">0.0135</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">0.0030</td>
+<td style="text-align: right;">0.0009</td>
+<td style="text-align: right;">0.0012</td>
+<td style="text-align: right;">0.9980</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_41</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">1.0014</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.1560</td>
+<td style="text-align: right;">0.1562</td>
+<td style="text-align: right;">0.0010</td>
+<td style="text-align: right;">0.3858</td>
+<td style="text-align: right;">0.3310</td>
+<td style="text-align: right;">102</td>
+<td style="text-align: right;">0.0045</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.9959</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_42</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">0.9978</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0022</td>
+<td style="text-align: right;">0.1544</td>
+<td style="text-align: right;">0.1543</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">0.3198</td>
+<td style="text-align: right;">0.1314</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">0.0042</td>
+<td style="text-align: right;">0.0022</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">0.9970</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_43</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">1.0029</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0029</td>
+<td style="text-align: right;">0.1509</td>
+<td style="text-align: right;">0.1525</td>
+<td style="text-align: right;">0.0105</td>
+<td style="text-align: right;">0.2261</td>
+<td style="text-align: right;">0.0630</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">0.0037</td>
+<td style="text-align: right;">0.0029</td>
+<td style="text-align: right;">0.0016</td>
+<td style="text-align: right;">0.9985</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_44</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">1.0034</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.1512</td>
+<td style="text-align: right;">0.1508</td>
+<td style="text-align: right;">0.0030</td>
+<td style="text-align: right;">0.2986</td>
+<td style="text-align: right;">0.0732</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">0.0039</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">0.9974</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_45</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">1.0007</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">0.1488</td>
+<td style="text-align: right;">0.1491</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">0.2503</td>
+<td style="text-align: right;">0.1370</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">0.0043</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">0.9982</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_46</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">0.9996</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0004</td>
+<td style="text-align: right;">0.1475</td>
+<td style="text-align: right;">0.1474</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">0.2977</td>
+<td style="text-align: right;">0.1819</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">0.0041</td>
+<td style="text-align: right;">0.0004</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">0.9975</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_47</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">1.0002</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.1446</td>
+<td style="text-align: right;">0.1459</td>
+<td style="text-align: right;">0.0088</td>
+<td style="text-align: right;">0.2717</td>
+<td style="text-align: right;">0.0486</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">0.0029</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.0013</td>
+<td style="text-align: right;">0.9978</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_48</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">1.0026</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;">0.1446</td>
+<td style="text-align: right;">0.1443</td>
+<td style="text-align: right;">0.0017</td>
+<td style="text-align: right;">0.3111</td>
+<td style="text-align: right;">0.2656</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">0.0047</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.9973</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_49</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">1.0015</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0015</td>
+<td style="text-align: right;">0.1430</td>
+<td style="text-align: right;">0.1429</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">0.3283</td>
+<td style="text-align: right;">0.2262</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">0.0042</td>
+<td style="text-align: right;">0.0015</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">0.9970</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.9986</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.0014</td>
+<td style="text-align: right;">0.1411</td>
+<td style="text-align: right;">0.1414</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;">0.2491</td>
+<td style="text-align: right;">-0.0427</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">0.0028</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.0004</td>
+<td style="text-align: right;">0.9980</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">25</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="saving-the-refined-sample-means" class="level2">
+<h2 class="anchored" data-anchor-id="saving-the-refined-sample-means">Saving the Refined Sample Means</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>refined_means_long <span class="ot">&lt;-</span> <span class="fu">convert_to_long_format</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> refined_means,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> refined_n_values,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">range_label =</span> <span class="st">"refined"</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  refined_means_long,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"exponential_refined_sample_means.csv"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="fine-grained-histograms" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-histograms">Fine-Grained Histograms</h2>
+<p>The following plots show the lower refinement bound, the selected sample size, and the upper refinement bound.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>refined_plot_values <span class="ot">&lt;-</span> <span class="fu">sort</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>      refinement_lower,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      selected_n,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      refinement_upper</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> refined_plot_values) {</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> refined_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="dv">40</span>,</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Histogram, n ="</span>, n),</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Sample mean"</span>,</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">border =</span> <span class="st">"white"</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dnorm</span>(</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>      x,</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean =</span> population_mean,</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">sd =</span> population_sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="exponential_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The histogram for the lower boundary can still show some right-skewness. The histogram for the selected sample size should have a more balanced and approximately bell-shaped pattern. The upper boundary provides a comparison showing how the shape continues to improve as (n) increases.</p>
+</section>
+<section id="fine-grained-normal-q-q-plots" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-normal-q-q-plots">Fine-Grained Normal Q-Q Plots</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> refined_plot_values) {</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> refined_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Normal Q-Q Plot, n ="</span>, n)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="exponential_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Q-Q plot for the lower boundary may still curve away from the red line, especially in the upper tail. The Q-Q plot for the selected sample size should be closer to a straight line. The upper boundary shows whether the alignment improves further for larger sample sizes.</p>
+</section>
+<section id="selected-sample-size" class="level2">
+<h2 class="anchored" data-anchor-id="selected-sample-size">Selected Sample Size</h2>
+<p>For the Exponential Population, I selected (n =) 39 as the smallest sample size that appeared normal enough.</p>
+<p>For the broad investigation, I examined (n = 1, 5, 10, 20, 30, 50, 75,) and (100). I compared the histograms, normal Q-Q plots, skewness, kurtosis, simulated standard errors, and tail behavior for these sample sizes.</p>
+<p>The broad results showed that the smaller sample sizes were still affected by the strong right-skewness of the exponential population. As (n) increased, the sampling distributions became more symmetric and closer to a bell-shaped curve. I then selected the refinement interval from (n = 30) through (n = 50) and tested every integer sample size in that interval.</p>
+<p>The selected sample size was (n =) 39. Its histogram was more balanced and approximately bell-shaped than the histograms for the smaller sample sizes. The normal Q-Q plot was also closer to a straight line, although it was not perfectly straight.</p>
+<p>The skewness at (n =) 39 was closer to zero than it was for the smaller sample sizes. The excess kurtosis also moved closer to zero, showing that the sampling distribution was becoming more similar to a normal distribution.</p>
+<p>The simulated mean was close to the theoretical population mean of 1. The simulated standard error was also close to the theoretical standard error:</p>
+<p><span class="math display">\[
+\operatorname{SE}(\overline{X})
+=
+\frac{1}{\sqrt{39}}.
+\]</span></p>
+<p>The exponential population has a long right tail, so some larger sample means and outliers are expected. However, the tail behavior became less extreme as (n) increased and did not prevent the selected sample size from appearing normal enough.</p>
+<p>The numerical comparisons supported the visual evidence by considering the mean error, standard-error error, and Q-Q plot straightness. I selected the smallest sample size that met the numerical criteria and also looked normal enough in the plots.</p>
+</section>
+<section id="clt-assumptions-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="clt-assumptions-and-limitations">CLT Assumptions and Limitations</h2>
+<p>The exponential observations are independent and identically distributed, and the population has a finite mean and finite variance. Therefore, the usual Central Limit Theorem applies.</p>
+<p>The original exponential population is strongly right-skewed and has a long right tail. Because of this, smaller sample sizes can still produce sampling distributions with visible skewness and extreme values. As the sample size increases, averaging reduces the influence of individual large observations, so the sampling distribution becomes more symmetric and approximately normal.</p>
+<p>The definition of “normal enough” is somewhat subjective. It depends on the histogram, Q-Q plot, numerical diagnostics, and how closely the simulated results match the theoretical values. A different set of criteria could lead to a slightly different selected sample size.</p>
+</section>
+<section id="reproducibility-check-using-a-different-seed" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-check-using-a-different-seed">Reproducibility Check Using a Different Seed</h2>
+<p>The original simulations used the last four digits of my student ID, 4160, as the random seed. I repeated the Exponential simulation using a different seed to check whether the results were reproducible.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9876</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>alternate_means <span class="ot">&lt;-</span> <span class="fu">replicate</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  reps,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rexp</span>(</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>      <span class="dv">39</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">rate =</span> population_rate</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>alternate_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  alternate_means</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>alternate_standard_error <span class="ot">&lt;-</span> <span class="fu">sd</span>(</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  alternate_means</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>alternate_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">simulated_mean =</span> alternate_mean,</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">simulated_standard_error =</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    alternate_standard_error</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  alternate_results,</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Exponential Results Using a Different Seed"</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Exponential Results Using a Different Seed</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">simulated_mean</th>
+<th style="text-align: right;">simulated_standard_error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.0017</td>
+<td style="text-align: right;">0.1589</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The exact numerical results changed slightly when the seed changed. This is expected because Monte Carlo simulations use randomly generated samples.</p>
+<p>However, the overall conclusion remained similar. The simulated mean stayed close to the theoretical mean of 1, and the simulated standard error stayed close to the theoretical standard error:</p>
+<p><span class="math display">\[
+\operatorname{SE}(\overline{X})
+=
+\frac{1}{\sqrt{39}}.
+\]</span></p>
+<p>This shows that the exact numerical results depend on the random seed, but the overall pattern and conclusion were reasonably stable.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>For the Exponential Population, I selected (n =) 39 as the smallest sample size that appeared normal enough.</p>
+<p>The original exponential population was strongly right-skewed with a long right tail. As the sample size increased, the sampling distribution of the mean became more symmetric and more similar to a normal distribution.</p>
+<p>At the selected sample size, the histogram was approximately bell-shaped, and the normal Q-Q plot was reasonably close to a straight line. The simulated mean was close to the theoretical mean of 1, and the simulated standard error was close to the theoretical value (1/). Skewness and excess kurtosis were also closer to zero than they were for smaller sample sizes.</p>
+<p>Some extreme values and right-tail behavior remained because the original population is exponential. However, these effects became less influential as (n) increased. Therefore, (n =) 39 was my evidence-based choice for when the exponential sampling distribution became normal enough.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

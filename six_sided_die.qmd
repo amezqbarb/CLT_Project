@@ -1,0 +1,662 @@
+---
+title: "Six-Sided Die Population"
+author: "Barbara Amezquita"
+format: html
+---
+
+## Theoretical expectations
+
+The population consists of the equally likely values:
+
+\[
+1,2,3,4,5,6
+\]
+
+```{r}
+population_values <- 1:6
+population_probabilities <- rep(1 / 6, 6)
+
+population_mean <- 3.5
+population_variance <- 35 / 12
+population_sd <- sqrt(population_variance)
+
+population_skewness <- 0
+population_excess_kurtosis <- -1.2686
+```
+
+The population mean is 3.5, and the population standard deviation is approximately 1.708. Because the die distribution is symmetric around 3.5, its skewness is 0. Its excess kurtosis is negative because the population is flatter and has lighter tails than a normal distribution.
+
+The theoretical standard error is:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{\sigma}{\sqrt{n}}
+=
+\frac{\sqrt{35/12}}{\sqrt{n}}.
+$$
+
+## Prediction for the Six-Sided Die
+
+The six-sided die distribution is discrete and not normally shaped, so I predict that smaller sample sizes will still show some discrete patterns and may not look perfectly bell-shaped. As \(n\) increases, I expect the sampling distribution of the sample mean to become more symmetric and approximately normal. I also expect its standard error to become closer to \(\sigma/\sqrt{n}\).
+
+## Original Population Distribution
+
+```{r}
+barplot(
+  population_probabilities,
+  names.arg = population_values,
+  col = "lightblue",
+  main = "Population Distribution of a Fair Six-Sided Die",
+  xlab = "Die value",
+  ylab = "Probability"
+)
+```
+
+The original population is flat because every die value has probability \(1/6\). It is symmetric around 3.5, but it is not bell-shaped because it only contains six possible values.
+
+## Reproducible Simulation Setup
+
+The last four digits of my student ID are 4160, so I use 4160 as the seed. This makes the simulation reproducible.
+
+```{r}
+student_id <- 4160
+reps <- 10000
+
+broad_n_values <- c(
+  1, 5, 10, 15, 20, 25, 30
+)
+
+die_generator <- function(n) {
+  sample(
+    population_values,
+    size = n,
+    replace = TRUE
+  )
+}
+
+simulate_means <- function(n, reps = 10000) {
+  replicate(
+    reps,
+    mean(die_generator(n))
+  )
+}
+
+run_simulations <- function(n_values, reps = 10000) {
+  
+  results <- list()
+  
+  for (n in n_values) {
+    
+    cat("Running simulation for n =", n, "\n")
+    
+    results[[paste0("n_", n)]] <- simulate_means(
+      n = n,
+      reps = reps
+    )
+  }
+  
+  results
+}
+```
+
+Here, \(n\) is the number of die rolls in one sample. The value `reps` is the number of repeated samples used to create the sampling distribution.
+
+## Broad-Range Simulations
+
+```{r}
+set.seed(student_id)
+
+broad_means <- run_simulations(
+  n_values = broad_n_values,
+  reps = reps
+)
+```
+
+Each value of \(n\) produces 10,000 simulated sample means.
+
+## Checking the Number of Simulations
+
+```{r}
+broad_simulation_check <- data.frame(
+  sample_size_n = broad_n_values,
+  number_of_sample_means = sapply(
+    broad_means,
+    length
+  )
+)
+
+knitr::kable(
+  broad_simulation_check,
+  digits = 0,
+  caption = "Broad-Range Simulation Counts"
+)
+```
+
+Each sample size should have 10,000 simulated sample means.
+
+## Saving the Broad-Range Sample Means
+
+```{r}
+convert_to_long_format <- function(
+  means_list,
+  n_values,
+  range_label
+) {
+  
+  do.call(
+    rbind,
+    lapply(seq_along(n_values), function(i) {
+      
+      data.frame(
+        range = range_label,
+        sample_size_n = n_values[i],
+        repetition = seq_len(length(means_list[[i]])),
+        sample_mean = means_list[[i]]
+      )
+    })
+  )
+}
+
+broad_means_long <- convert_to_long_format(
+  broad_means,
+  broad_n_values,
+  "broad"
+)
+
+write.csv(
+  broad_means_long,
+  "six_sided_die_broad_sample_means.csv",
+  row.names = FALSE
+)
+```
+
+## Diagnostic Functions
+
+```{r}
+calculate_skewness <- function(x) {
+  mean((x - mean(x))^3) / sd(x)^3
+}
+
+calculate_excess_kurtosis <- function(x) {
+  mean((x - mean(x))^4) / sd(x)^4 - 3
+}
+
+calculate_outliers <- function(x) {
+  
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  iqr_value <- q3 - q1
+  
+  sum(
+    x < q1 - 1.5 * iqr_value |
+      x > q3 + 1.5 * iqr_value
+  )
+}
+
+calculate_diagnostics <- function(
+  means_list,
+  n_values
+) {
+  
+  simulated_means <- sapply(
+    means_list,
+    mean
+  )
+  
+  simulated_se <- sapply(
+    means_list,
+    sd
+  )
+  
+  theoretical_se <- population_sd / sqrt(n_values)
+  
+  tail_proportions <- sapply(
+    seq_along(n_values),
+    function(i) {
+      
+      mean(
+        abs(
+          means_list[[i]] - population_mean
+        ) >
+          3 * theoretical_se[i]
+      )
+    }
+  )
+  
+  data.frame(
+    sample_size_n = n_values,
+    
+    simulated_mean = simulated_means,
+    
+    theoretical_mean =
+      rep(population_mean, length(n_values)),
+    
+    mean_error =
+      simulated_means - population_mean,
+    
+    simulated_standard_error =
+      simulated_se,
+    
+    theoretical_standard_error =
+      theoretical_se,
+    
+    relative_standard_error_error =
+      abs(
+        simulated_se -
+          theoretical_se
+      ) / theoretical_se,
+    
+    skewness = sapply(
+      means_list,
+      calculate_skewness
+    ),
+    
+    excess_kurtosis = sapply(
+      means_list,
+      calculate_excess_kurtosis
+    ),
+    
+    outlier_count = sapply(
+      means_list,
+      calculate_outliers
+    ),
+    
+    proportion_beyond_three_SE =
+      tail_proportions
+  )
+}
+```
+
+## Broad-Range Diagnostics
+
+```{r}
+broad_diagnostics <- calculate_diagnostics(
+  broad_means,
+  broad_n_values
+)
+
+knitr::kable(
+  broad_diagnostics,
+  digits = 4,
+  caption = "Broad-Range Diagnostic Results"
+)
+```
+
+The simulated mean should be close to 3.5. The simulated standard error should become closer to the theoretical standard error as \(n\) increases. The skewness should be close to 0, while the excess kurtosis should move closer to 0 as the sampling distribution becomes more normal.
+
+## Broad-Range Histograms
+
+```{r}
+broad_histogram_values <- c(
+  10, 15, 20, 25
+)
+
+par(mfrow = c(2, 2))
+
+for (n in broad_histogram_values) {
+  
+  means <- broad_means[[paste0("n_", n)]]
+  
+  hist(
+    means,
+    breaks = 10,
+    probability = TRUE,
+    main = paste("Sampling Distribution, n =", n),
+    xlab = "Sample mean",
+    col = "lightblue",
+    border = "white"
+  )
+  
+  curve(
+    dnorm(
+      x,
+      mean = population_mean,
+      sd = population_sd / sqrt(n)
+    ),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The histograms should become more bell-shaped and symmetric as \(n\) increases. Because the die is discrete, some spikes may remain. These spikes occur because sample means can only take certain values based on the possible integer totals of the die rolls. Therefore, I will evaluate the overall shape instead of requiring the histogram to be perfectly smooth.
+
+## Broad-Range Normal Q–Q Plots
+
+```{r}
+par(mfrow = c(2, 2))
+
+for (n in broad_histogram_values) {
+  
+  means <- broad_means[[paste0("n_", n)]]
+  
+  qqnorm(
+    means,
+    main = paste("Normal Q–Q Plot, n =", n)
+  )
+  
+  qqline(
+    means,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+For smaller values of \(n\), the points may show more curvature or deviation from the red line. As \(n\) increases, I expect the points to become more approximately linear, providing evidence that the sampling distribution is becoming more normal.
+
+## Broad-Range Standard-Error Comparison
+
+```{r}
+plot(
+  broad_diagnostics$sample_size_n,
+  broad_diagnostics$simulated_standard_error,
+  type = "b",
+  pch = 19,
+  log = "x",
+  xlab = "Sample size n",
+  ylab = "Standard deviation of sample means",
+  main = "Simulated and Theoretical Standard Error"
+)
+
+lines(
+  broad_diagnostics$sample_size_n,
+  broad_diagnostics$theoretical_standard_error,
+  type = "b",
+  col = "red",
+  pch = 17
+)
+
+legend(
+  "topright",
+  legend = c(
+    "Simulated standard error",
+    "Theoretical standard error"
+  ),
+  col = c("black", "red"),
+  pch = c(19, 17),
+  lty = 1
+)
+```
+
+The simulated standard error should generally follow the theoretical curve. Any small differences are expected because the simulated values are based on a finite number of repetitions.
+
+## Choosing the Refinement Interval
+
+After examining the broad-range results, choose two neighboring values that bracket the transition to approximately normal behavior.
+
+```{r}
+# Change these values after examining the broad-range results.
+refinement_lower <- 10
+refinement_upper <- 20
+
+refined_n_values <- seq(
+  refinement_lower,
+  refinement_upper,
+  by = 1
+)
+
+refined_n_values
+```
+
+I choose the interval 10 to 20 because on their histograms, 10 seemed not normal enough and 20 seemed normal enough. Therefore the n value I am searching for should fall within those boundaries.
+
+## Fine-Grained Simulations
+
+```{r}
+set.seed(student_id)
+
+refined_means <- run_simulations(
+  refined_n_values,
+  reps
+)
+```
+
+This tests every integer sample size between the two selected boundaries.
+
+## Fine-Grained Diagnostics
+
+```{r}
+refined_diagnostics <- calculate_diagnostics(
+  refined_means,
+  refined_n_values
+)
+
+knitr::kable(
+  refined_diagnostics,
+  digits = 4,
+  caption = "Fine-Grained Diagnostic Results"
+)
+```
+
+## Comparing Refined Sample Sizes
+
+The following calculations compare the refined sample sizes using mean error, standard-error error, and Q–Q plot straightness.
+
+```{r}
+qq_correlations <- c()
+
+for (i in 1:length(refined_n_values)) {
+  
+  n <- refined_n_values[i]
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  probabilities <- (
+    (1:length(means)) - 0.5
+  ) / length(means)
+  
+  theoretical_quantiles <- qnorm(
+    probabilities
+  )
+  
+  qq_correlations[i] <- cor(
+    sort(means),
+    theoretical_quantiles
+  )
+}
+
+refined_diagnostics$absolute_mean_error <-
+  abs(refined_diagnostics$mean_error)
+
+refined_diagnostics$absolute_standard_error_error <-
+  abs(
+    refined_diagnostics$simulated_standard_error -
+      refined_diagnostics$theoretical_standard_error
+  )
+
+refined_diagnostics$qq_correlation <-
+  qq_correlations
+```
+
+```{r}
+refined_diagnostics$mean_error_rank <- rank(
+  refined_diagnostics$absolute_mean_error,
+  ties.method = "min"
+)
+
+refined_diagnostics$standard_error_rank <- rank(
+  refined_diagnostics$absolute_standard_error_error,
+  ties.method = "min"
+)
+
+refined_diagnostics$qq_rank <- rank(
+  -refined_diagnostics$qq_correlation,
+  ties.method = "min"
+)
+
+refined_diagnostics$total_score <-
+  refined_diagnostics$mean_error_rank +
+    refined_diagnostics$standard_error_rank +
+    refined_diagnostics$qq_rank
+```
+
+The sample size with the smallest total score is the strongest numerical candidate. I will still compare this result with the histograms, Q–Q plots, skewness, kurtosis, and tail behavior.
+
+```{r}
+best_row <- which.min(
+  refined_diagnostics$total_score
+)
+
+best_n <- refined_diagnostics$sample_size_n[best_row]
+
+best_n
+```
+
+```{r}
+comparison_table <- refined_diagnostics[
+  order(refined_diagnostics$total_score),
+]
+
+knitr::kable(
+  comparison_table,
+  digits = 4,
+  caption = "Comparison of Refined Sample Sizes"
+)
+```
+
+## Saving the Refined Sample Means
+
+```{r}
+refined_means_long <- convert_to_long_format(
+  refined_means,
+  refined_n_values,
+  "refined"
+)
+
+write.csv(
+  refined_means_long,
+  "six_sided_die_refined_sample_means.csv",
+  row.names = FALSE
+)
+```
+
+## Fine-Grained Histograms
+
+The plots below show the lower refinement bound, the best-scoring value, and the upper refinement bound.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+refined_plot_values <- sort(
+  unique(
+    c(
+      refinement_lower,
+      best_n,
+      refinement_upper
+    )
+  )
+)
+
+par(mfrow = c(2, 2))
+
+for (n in refined_plot_values) {
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  hist(
+    means,
+    breaks = 40,
+    probability = TRUE,
+    main = paste("Histogram, n =", n),
+    xlab = "Sample mean",
+    col = "lightblue",
+    border = "white"
+  )
+  
+  curve(
+    dnorm(
+      x,
+      mean = population_mean,
+      sd = population_sd / sqrt(n)
+    ),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The selected value should have a reasonably bell-shaped histogram. Some small spikes may still be visible because the original die distribution is discrete.
+
+## Fine-Grained Normal Q–Q Plots
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+par(mfrow = c(2, 2))
+
+for (n in refined_plot_values) {
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  qqnorm(
+    means,
+    main = paste("Normal Q–Q Plot, n =", n)
+  )
+  
+  qqline(
+    means,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The best candidate should have a Q–Q plot that is reasonably straight, especially through the middle of the distribution. Deviations in the tails may remain because the die population is discrete.
+
+## Selected Sample Size
+
+For the Six-Sided Die Population, I selected \(n = 14\) as the smallest sample size that appeared normal enough.
+
+For the broad investigation, I examined \(n = 1, 5, 10, 15, 20, 25,\) and \(30\). I compared the histograms, normal Q–Q plots, skewness, kurtosis, simulated standard errors, and tail behavior for these sample sizes.
+
+The broad results suggested that \(n = 10\) was not quite normal enough, while \(n = 20\) appeared sufficiently close to normal. Therefore, I used \(n = 10\) and \(n = 20\) as the refinement bounds. I then tested every integer sample size from \(n = 10\) through \(n = 20\).
+
+Among the refined sample sizes, \(n = 14\) was the smallest value that looked normal enough. Its histogram was centered close to the theoretical mean of \(3.5\) and had an overall bell-shaped pattern. Because the die is discrete, the histogram still contained some small spikes. These spikes are expected because sample means can only take certain discrete values, but the overall shape at \(n = 14\) was approximately normal.
+
+The normal Q–Q plot for \(n = 14\) was approximately linear, although it was not perfectly straight. This supported the conclusion from the histogram that the sampling distribution was reasonably close to normal.
+
+The skewness at \(n = 14\) was reasonably close to zero, which suggests that the sampling distribution was fairly symmetric. The excess kurtosis was also closer to zero than it was for smaller sample sizes, indicating that the shape was becoming more similar to a normal distribution.
+
+The simulated standard error was close to the theoretical standard error:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{\sqrt{35/12}}{\sqrt{14}}
+$$
+
+The simulated mean was also close to the theoretical population mean of \(3.5\). There was no major outlier or tail behavior that changed my decision. Any small differences in the tails were expected because the simulation was based on a discrete die population.
+
+The numerical comparison score also supported this conclusion. It compared the absolute mean error, the absolute standard-error error, and the straightness of the Q–Q plot. Although the score was only supporting evidence, it identified \(n = 14\) as the best overall refined sample size. Therefore, I selected \(n = 14\) as the smallest sample size that appeared normal enough for this project.
+
+## CLT Assumptions and Limitations
+
+The die rolls are independent and identically distributed, and the population has a finite mean and finite variance. Therefore, the usual Central Limit Theorem applies.
+
+However, the original population is discrete and flat rather than bell-shaped. Because of this, the sampling distributions may still show small spikes even when their overall shape is approximately normal. The CLT describes the overall behavior of the sampling distribution, so these small spikes do not automatically mean that the distribution is not normal enough.
+
+The definition of “normal enough” is also somewhat subjective. It depends on the histogram, Q–Q plot, numerical diagnostics, and how closely the simulated results match the theoretical values. Different reasonable criteria could lead to slightly different choices of \(n\).
+
+## Conclusion
+
+For the Six-Sided Die Population, I selected \(n = 14\) as the smallest sample size that appeared normal enough.
+
+The original die population is discrete and flat, but the sampling distribution of the mean became more symmetric and approximately bell-shaped as \(n\) increased. I narrowed the refinement range to \(n = 10\) through \(n = 20\), then tested every integer value in that interval.
+
+At \(n = 14\), the histogram was approximately bell-shaped and centered near the theoretical mean of \(3.5\). The normal Q–Q plot was reasonably close to a straight line. The simulated mean was close to \(3.5\), and the simulated standard error was close to the theoretical value. Skewness was close to zero, excess kurtosis was closer to zero than it was for smaller values of \(n\), and no serious outlier or tail behavior affected the decision.
+
+The numerical score agreed with the visual evidence and identified \(n = 14\) as the best overall refined sample size. Therefore, \(n = 14\) was my evidence-based choice for when the Six-Sided Die sampling distribution became normal enough.

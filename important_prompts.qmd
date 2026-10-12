@@ -1,0 +1,251 @@
+---
+title: "CLT Project Important Prompts"
+author: "Barbara Amezquita"
+format: html
+execute:
+  eval: false
+---
+
+## Project Planning
+
+**Prompt**
+
+I know I am not finding a perfect value of \(n\), but for every distribution I need to find a distinct \(n\) value that makes each distribution “normal enough.” This means that the value of \(n\) should be large enough for that specific distribution to produce an approximately normal sampling distribution.
+
+I am defining “normal enough” as having:
+
+- a bell-shaped curve;
+- a center close to the theoretical mean;
+- a spread close to \(\sigma / \sqrt{n}\);
+- a simulated mean close to the theoretical mean;
+- a simulated standard deviation close to the theoretical standard error;
+- skewness close to zero;
+- excess kurtosis close to zero;
+- reasonable outlier behavior; and
+- reasonable tail behavior.
+
+I want to first examine a broad range of \(n\) values. Then I want to narrow the search between two values and test every integer \(n\) between them. Finally, I want to use the evidence to explain why my selected \(n\) is normal enough for that specific distribution.
+
+Response
+
+This is a good strategy for the project.
+
+I will use a broad range of sample sizes first:
+
+$$
+n = 1, 2, 5, 10, 20, 30, 50, 100.
+$$
+
+For each distribution, I will:
+
+1. Examine the histograms and Q-Q plots across the broad range.
+2. Identify two values where the behavior changes.
+3. Test every integer between those two values.
+4. Choose the smallest \(n\) that provides convincing evidence of being normal enough.
+5. Support the choice using multiple types of evidence instead of relying on only one statistic.
+
+The evidence should include:
+
+- the shape of the histogram;
+- the alignment of the normal Q-Q plot;
+- the simulated mean;
+- the theoretical mean;
+- the simulated standard error;
+- the theoretical standard error;
+- skewness;
+- excess kurtosis;
+- outliers; and
+- tail behavior.
+
+The simulated mean and standard error show whether the sampling distribution is centered and spread correctly. However, they do not prove normality by themselves. The histogram, Q-Q plot, skewness, kurtosis, and tails provide the main evidence about the shape of the distribution.
+
+The conclusions are distribution-specific:
+
+- The Standard Normal distribution is already normal, so \(n=1\) is sufficient.
+- The Six-Sided Die requires a larger \(n\) because its population is discrete and flat.
+- The Exponential distribution requires a larger \(n\) because it begins strongly right-skewed.
+- The Small Binomial distribution requires its own selected value of \(n\) because it is discrete and right-skewed.
+- The Cauchy distribution does not have an ordinary normal-enough \(n\) because its mean and variance are undefined, so the usual CLT does not apply.
+
+## Six-Sided Die Histogram Spikes
+
+**Prompt**
+
+The Six-Sided Die distribution uses \(n\) values of 1, 5, 10, 15, 20, 25, and 30. Why do \(n=15\) and \(n=25\) appear to have peaks within the distribution, but \(n=10\) and \(n=20\) do not?
+
+Response
+
+This happens because the Six-Sided Die is a discrete distribution. Sample means can only take certain possible values:
+
+$$
+\overline{X}
+=
+\frac{\text{integer sample total}}{n}.
+$$
+
+Therefore, the sampling distribution is not perfectly smooth. It is made of many possible spikes.
+
+For odd sample sizes such as \(n=15\) and \(n=25\), the population mean of 3.5 cannot occur exactly because:
+
+$$
+3.5(15)=52.5
+$$
+
+and
+
+$$
+3.5(25)=87.5.
+$$
+
+The two values closest to 3.5 can have equal highest probability. This can create a visible central peak or a slight double-peak pattern.
+
+For even sample sizes such as \(n=10\) and \(n=20\), 3.5 is an attainable sample mean because:
+
+$$
+3.5(10)=35
+$$
+
+and
+
+$$
+3.5(20)=70.
+$$
+
+The center can therefore be concentrated at one exact value instead of two nearby values.
+
+The appearance of the peaks also depends on the histogram bins. With `breaks = 40`, the bins may line up differently with the possible sample means for the different sample sizes. Some spikes may look more prominent simply because of bin placement.
+
+The spikes are mainly caused by:
+
+- the discrete nature of the die;
+- whether the sample size is odd or even; and
+- histogram bin placement.
+
+These spikes do not automatically mean that \(n=15\) or \(n=25\) is less normal than \(n=10\) or \(n=20\). Normality should be judged using the overall histogram shape, Q-Q plot, skewness, kurtosis, standard error, and tail behavior.
+
+## Comparing Refined Sample Sizes
+
+**Prompt**
+
+After I refine the \(n\) values to a range between two values, I want to identify the \(n\) value with the smallest error for the mean and standard deviation and the straightest Q-Q plot line. How can I use a loop to look at every value and find the one that best fits this description?
+
+Response
+
+The three goals can be turned into a numerical score:
+
+1. Find the smallest absolute mean error.
+2. Find the smallest standard-error error.
+3. Find the straightest Q-Q plot, measured by a correlation closest to 1.
+
+The Q-Q correlation can be calculated for every refined sample size:
+
+```{r}
+qq_correlations <- c()
+
+for (i in seq_along(refined_n_values)) {
+  
+  n <- refined_n_values[i]
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  theoretical_quantiles <- qnorm(
+    ppoints(length(means))
+  )
+  
+  qq_correlations[i] <- cor(
+    sort(means),
+    theoretical_quantiles
+  )
+}
+```
+
+The absolute errors can then be added to the diagnostics table:
+
+```{r}
+refined_diagnostics$absolute_mean_error <-
+  abs(refined_diagnostics$mean_error)
+
+refined_diagnostics$absolute_standard_error_error <-
+  abs(
+    refined_diagnostics$simulated_standard_error -
+      refined_diagnostics$theoretical_standard_error
+  )
+
+refined_diagnostics$qq_correlation <-
+  qq_correlations
+```
+
+Each sample size can be ranked for each criterion:
+
+```{r}
+refined_diagnostics$mean_error_rank <- rank(
+  refined_diagnostics$absolute_mean_error,
+  ties.method = "min"
+)
+
+refined_diagnostics$standard_error_rank <- rank(
+  refined_diagnostics$absolute_standard_error_error,
+  ties.method = "min"
+)
+
+refined_diagnostics$qq_rank <- rank(
+  -refined_diagnostics$qq_correlation,
+  ties.method = "min"
+)
+```
+
+The negative sign is used for the Q-Q correlation because a larger correlation is better, while smaller rank values are better.
+
+The total score is:
+
+```{r}
+refined_diagnostics$total_score <-
+  refined_diagnostics$mean_error_rank +
+    refined_diagnostics$standard_error_rank +
+    refined_diagnostics$qq_rank
+```
+
+The lowest total score identifies the strongest overall numerical candidate:
+
+```{r}
+best_row <- which.min(
+  refined_diagnostics$total_score
+)
+
+best_n <- refined_diagnostics$sample_size_n[best_row]
+
+best_n
+```
+
+However, the numerical score should be used as supporting evidence. The final decision should also consider whether the histogram looks approximately bell-shaped and whether the Q-Q plot is reasonably straight.
+
+## Cauchy Central Histograms
+
+**Prompt**
+
+Why does using central histograms work better than normal histograms? Is it because of the distribution’s tails?
+
+Response
+
+Yes. Central histograms work better because the Cauchy distribution has extremely heavy tails.
+
+A few simulated Cauchy sample means can be extremely large or extremely small. When those values are included in the full histogram, they stretch the x-axis and compress most observations near zero into a very small region. This makes the histogram difficult to read.
+
+A central histogram zooms in on the main concentration of values and makes the central shape easier to inspect. However, it does not prove that the distribution is normal because it leaves out the extreme tails.
+
+That is why the Cauchy analysis should use several types of evidence:
+
+- the central histogram to examine the main shape;
+- the Q-Q plot to examine normality;
+- the outlier count to measure extreme observations; and
+- the tail proportion to show how often extreme values occur.
+
+For the Cauchy distribution, the tails are not just a minor issue. They are the reason the ordinary CLT does not apply. The sample means remain heavy-tailed even as \(n\) increases.
+
+## Overall Project Takeaway
+
+The goal of this project is not to find one universal sample size that works for every population. Different populations require different sample sizes because they begin with different shapes and properties.
+
+The Standard Normal distribution is already normal. The Six-Sided Die and Small Binomial distributions are discrete, so their histograms can contain spikes. The Exponential distribution is strongly right-skewed and usually requires a larger sample size. The Cauchy distribution does not satisfy the finite-variance condition needed for the ordinary CLT.
+
+The selected sample size for each distribution should therefore be based on the combined evidence from the histogram, Q-Q plot, center, spread, skewness, kurtosis, outliers, and tail behavior.

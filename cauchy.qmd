@@ -1,0 +1,706 @@
+---
+title: "Cauchy Distribution"
+author: "Barbara Amezquita"
+format: html
+---
+
+---
+title: "Cauchy Population"
+author: "Barbara Amezquita"
+format: html
+---
+
+## Theoretical Expectations
+
+The population follows a standard Cauchy distribution:
+
+$$
+X \sim \operatorname{Cauchy}(0,1)
+$$
+
+```{r}
+population_location <- 0
+population_scale <- 1
+
+population_mean <- NA
+population_variance <- NA
+population_sd <- NA
+population_skewness <- NA
+population_excess_kurtosis <- NA
+
+population_median <- 0
+population_iqr <- 2
+```
+
+The Cauchy distribution has extremely heavy tails. Its theoretical mean, variance, standard deviation, skewness, and kurtosis are undefined.
+
+Because the Cauchy population does not have a finite mean or variance, the ordinary Central Limit Theorem does not apply to its sample means. This means that increasing the sample size does not guarantee that the sampling distribution will become approximately normal.
+
+The median of the standard Cauchy distribution is 0. Its first quartile is \(-1\), and its third quartile is \(1\), so its theoretical interquartile range is:
+
+$$
+\operatorname{IQR}
+=
+Q_3 - Q_1
+=
+1 - (-1)
+=
+2.
+$$
+
+## Prediction for the Cauchy Population
+
+The original Cauchy population is symmetric around zero, but it has extremely heavy tails. I do not expect the sampling distribution of the mean to become approximately normal as \(n\) increases.
+
+The Cauchy distribution is an important exception to the Central Limit Theorem because it does not have a finite mean or variance. I expect the sample means to continue showing extreme values, large outliers, and heavy tails even for larger sample sizes.
+
+## Original Population Distribution
+
+```{r}
+curve(
+  dcauchy(
+    x,
+    location = population_location,
+    scale = population_scale
+  ),
+  from = -10,
+  to = 10,
+  col = "blue",
+  lwd = 2,
+  main = "Standard Cauchy Population Distribution",
+  xlab = "Population value",
+  ylab = "Density"
+)
+```
+
+The Cauchy distribution is symmetric and centered at zero. However, it has much heavier tails than a normal distribution. This means that extremely large positive and negative values are more likely than they would be under a normal distribution.
+
+## Reproducible Simulation Setup
+
+The last four digits of my student ID are 4160.
+
+```{r}
+student_id <- 4160
+reps <- 10000
+
+broad_n_values <- c(
+  1, 5, 10, 20, 30, 50, 75, 100
+)
+
+cauchy_generator <- function(n) {
+  rcauchy(
+    n,
+    location = population_location,
+    scale = population_scale
+  )
+}
+
+simulate_means <- function(n, reps = 10000) {
+  replicate(
+    reps,
+    mean(cauchy_generator(n))
+  )
+}
+
+run_simulations <- function(n_values, reps = 10000) {
+  
+  results <- list()
+  
+  for (n in n_values) {
+    
+    cat("Running simulation for n =", n, "\n")
+    
+    results[[paste0("n_", n)]] <- simulate_means(
+      n = n,
+      reps = reps
+    )
+  }
+  
+  results
+}
+```
+
+Here, \(n\) is the number of Cauchy observations in one sample. The value `reps` is the number of repeated samples.
+
+## Broad-Range Simulations
+
+```{r}
+set.seed(student_id)
+
+broad_means <- run_simulations(
+  n_values = broad_n_values,
+  reps = reps
+)
+```
+
+Each value of \(n\) produces 10,000 simulated sample means.
+
+## Checking the Number of Simulations
+
+```{r}
+broad_simulation_check <- data.frame(
+  sample_size_n = broad_n_values,
+  number_of_sample_means = sapply(
+    broad_means,
+    length
+  )
+)
+
+knitr::kable(
+  broad_simulation_check,
+  digits = 0,
+  caption = "Broad-Range Simulation Counts"
+)
+```
+
+Each sample size has the same number of simulated sample means, so the simulations were completed as expected.
+
+## Saving the Broad-Range Sample Means
+
+```{r}
+convert_to_long_format <- function(
+  means_list,
+  n_values,
+  range_label
+) {
+  
+  do.call(
+    rbind,
+    lapply(seq_along(n_values), function(i) {
+      
+      data.frame(
+        range = range_label,
+        sample_size_n = n_values[i],
+        repetition = seq_len(
+          length(means_list[[i]])
+        ),
+        sample_mean = means_list[[i]]
+      )
+    })
+  )
+}
+
+broad_means_long <- convert_to_long_format(
+  means_list = broad_means,
+  n_values = broad_n_values,
+  range_label = "broad"
+)
+
+write.csv(
+  broad_means_long,
+  "cauchy_broad_sample_means.csv",
+  row.names = FALSE
+)
+```
+
+## Diagnostic Functions
+
+```{r}
+calculate_outliers <- function(x) {
+  
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  iqr_value <- q3 - q1
+  
+  sum(
+    x < q1 - 1.5 * iqr_value |
+      x > q3 + 1.5 * iqr_value
+  )
+}
+
+calculate_qq_correlation <- function(x) {
+  
+  probabilities <- (
+    (1:length(x)) - 0.5
+  ) / length(x)
+  
+  theoretical_quantiles <- qnorm(
+    probabilities
+  )
+  
+  cor(
+    sort(x),
+    theoretical_quantiles
+  )
+}
+
+calculate_cauchy_diagnostics <- function(
+  means_list,
+  n_values
+) {
+  
+  simulated_means <- sapply(
+    means_list,
+    mean
+  )
+  
+  simulated_medians <- sapply(
+    means_list,
+    median
+  )
+  
+  simulated_iqrs <- sapply(
+    means_list,
+    IQR
+  )
+  
+  outlier_counts <- sapply(
+    means_list,
+    calculate_outliers
+  )
+  
+  qq_correlations <- sapply(
+    means_list,
+    calculate_qq_correlation
+  )
+  
+  tail_proportions <- sapply(
+    means_list,
+    function(x) {
+      mean(abs(x) > 10)
+    }
+  )
+  
+  results <- data.frame(
+    sample_size_n = n_values,
+    
+    simulated_mean = simulated_means,
+    
+    simulated_median = simulated_medians,
+    
+    median_error =
+      simulated_medians - population_median,
+    
+    simulated_iqr = simulated_iqrs,
+    
+    iqr_error =
+      simulated_iqrs - population_iqr,
+    
+    outlier_count = outlier_counts,
+    
+    proportion_beyond_absolute_value_10 =
+      tail_proportions,
+    
+    qq_correlation = qq_correlations
+  )
+  
+  results
+}
+```
+
+## Broad-Range Diagnostics
+
+```{r}
+broad_diagnostics <- calculate_cauchy_diagnostics(
+  means_list = broad_means,
+  n_values = broad_n_values
+)
+
+knitr::kable(
+  broad_diagnostics,
+  digits = 4,
+  caption = "Broad-Range Cauchy Diagnostic Results"
+)
+```
+
+Because the Cauchy population has no finite mean or variance, the simulated means and standard errors cannot be compared with theoretical values.
+
+Instead, I use the median, interquartile range, outlier counts, extreme tails, and Q-Q plots to study the sampling distributions.
+
+## Broad-Range Histograms
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+broad_histogram_values <- c(
+  1, 10, 30, 100
+)
+
+par(mfrow = c(2, 2))
+
+for (n in broad_histogram_values) {
+  
+  means <- broad_means[[paste0("n_", n)]]
+  
+  central_means <- means[
+    means >= -10 &
+      means <= 10
+  ]
+  
+  hist(
+    central_means,
+    breaks = 40,
+    probability = TRUE,
+    xlim = c(-10, 10),
+    main = paste(
+      "Central Histogram, n =", n
+    ),
+    xlab = "Sample mean",
+    col = "lightblue",
+    border = "white"
+  )
+  
+  curve(
+    dcauchy(
+      x,
+      location = 0,
+      scale = 1
+    ) /
+      (
+        pcauchy(10) -
+          pcauchy(-10)
+      ),
+    from = -10,
+    to = 10,
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The histograms are displayed over the central region so that the main shape can be seen more clearly. The full histograms are difficult to read because a few extremely large values can stretch the horizontal axis.
+
+Even after focusing on the central region, the distributions still show the effects of the heavy tails. Increasing \(n\) does not remove the extreme-value behavior because the Cauchy distribution remains Cauchy when sample means are taken.
+
+## Broad-Range Normal Q-Q Plots
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+par(mfrow = c(2, 2))
+
+for (n in broad_histogram_values) {
+  
+  means <- broad_means[[paste0("n_", n)]]
+  
+  qqnorm(
+    means,
+    main = paste(
+      "Normal Q-Q Plot, n =", n
+    )
+  )
+  
+  qqline(
+    means,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The Q-Q plot points do not follow the red line closely. The strong departures in the tails show that the sampling distributions are not approximately normal.
+
+The Q-Q plots do not become consistently linear as \(n\) increases. This supports the conclusion that the ordinary CLT does not apply to the Cauchy population.
+
+## Broad-Range Median Comparison
+
+```{r}
+plot(
+  broad_diagnostics$sample_size_n,
+  broad_diagnostics$simulated_median,
+  type = "b",
+  pch = 19,
+  log = "x",
+  xlab = "Sample size n",
+  ylab = "Simulated median",
+  main = "Cauchy Sample-Mean Medians"
+)
+
+abline(
+  h = population_median,
+  col = "red",
+  lwd = 2
+)
+
+legend(
+  "topright",
+  legend = c(
+    "Simulated median",
+    "Theoretical median"
+  ),
+  col = c("black", "red"),
+  pch = c(19, NA),
+  lty = c(1, 1)
+)
+```
+
+The simulated medians tend to remain near the theoretical median of zero. This shows that the center of the distribution can be stable even though the mean and variance are undefined.
+
+## Broad-Range IQR Comparison
+
+```{r}
+plot(
+  broad_diagnostics$sample_size_n,
+  broad_diagnostics$simulated_iqr,
+  type = "b",
+  pch = 19,
+  log = "x",
+  xlab = "Sample size n",
+  ylab = "Simulated IQR",
+  main = "Cauchy Sample-Mean IQRs"
+)
+
+abline(
+  h = population_iqr,
+  col = "red",
+  lwd = 2
+)
+
+legend(
+  "topright",
+  legend = c(
+    "Simulated IQR",
+    "Theoretical IQR"
+  ),
+  col = c("black", "red"),
+  pch = c(19, NA),
+  lty = c(1, 1)
+)
+```
+
+The simulated IQRs can vary from one sample size to another. Unlike the standard error, the IQR is a useful measure of spread for the Cauchy distribution because it does not depend on a finite variance.
+
+## Choosing the Refinement Interval
+
+The broad results showed that the Cauchy sample means did not become normal as \(n\) increased. I selected \(n = 30\) and \(n = 50\) for the refinement interval to examine the behavior more closely.
+
+```{r}
+refinement_lower <- 30
+refinement_upper <- 50
+
+refined_n_values <- seq(
+  refinement_lower,
+  refinement_upper,
+  by = 1
+)
+
+refined_n_values
+```
+
+## Fine-Grained Simulations
+
+```{r}
+set.seed(student_id)
+
+refined_means <- run_simulations(
+  n_values = refined_n_values,
+  reps = reps
+)
+```
+
+## Fine-Grained Diagnostics
+
+```{r}
+refined_diagnostics <- calculate_cauchy_diagnostics(
+  means_list = refined_means,
+  n_values = refined_n_values
+)
+
+knitr::kable(
+  refined_diagnostics,
+  digits = 4,
+  caption = "Fine-Grained Cauchy Diagnostic Results"
+)
+```
+
+## Comparing Refined Sample Sizes
+
+For the Cauchy population, a normality score cannot show that the CLT has worked because the population does not have a finite mean or variance.
+
+The score only identifies the least non-normal candidate within the tested interval. It is based on the Q-Q plot correlation, median error, and IQR error.
+
+```{r}
+refined_diagnostics$qq_rank <- rank(
+  -refined_diagnostics$qq_correlation,
+  ties.method = "min"
+)
+
+refined_diagnostics$median_error_rank <- rank(
+  abs(refined_diagnostics$median_error),
+  ties.method = "min"
+)
+
+refined_diagnostics$iqr_error_rank <- rank(
+  abs(refined_diagnostics$iqr_error),
+  ties.method = "min"
+)
+
+refined_diagnostics$total_score <-
+  refined_diagnostics$qq_rank +
+    refined_diagnostics$median_error_rank +
+    refined_diagnostics$iqr_error_rank
+```
+
+```{r}
+least_non_normal_row <- which.min(
+  refined_diagnostics$total_score
+)
+
+least_non_normal_n <-
+  refined_diagnostics$sample_size_n[
+    least_non_normal_row
+]
+
+least_non_normal_n
+```
+
+```{r}
+comparison_table <- refined_diagnostics[
+  order(refined_diagnostics$total_score),
+]
+
+knitr::kable(
+  comparison_table,
+  digits = 4,
+  caption = "Comparison of Refined Cauchy Sample Sizes"
+)
+```
+
+## Saving the Refined Sample Means
+
+```{r}
+refined_means_long <- convert_to_long_format(
+  means_list = refined_means,
+  n_values = refined_n_values,
+  range_label = "refined"
+)
+
+write.csv(
+  refined_means_long,
+  "cauchy_refined_sample_means.csv",
+  row.names = FALSE
+)
+```
+
+## Fine-Grained Histograms
+
+The following plots show the lower refinement bound, the least non-normal sample size, and the upper refinement bound.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+refined_plot_values <- sort(
+  unique(
+    c(
+      refinement_lower,
+      least_non_normal_n,
+      refinement_upper
+    )
+  )
+)
+
+par(mfrow = c(2, 2))
+
+for (n in refined_plot_values) {
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  central_means <- means[
+    means >= -10 &
+      means <= 10
+  ]
+  
+  hist(
+    central_means,
+    breaks = 40,
+    probability = TRUE,
+    xlim = c(-10, 10),
+    main = paste(
+      "Central Histogram, n =", n
+    ),
+    xlab = "Sample mean",
+    col = "lightblue",
+    border = "white"
+  )
+  
+  curve(
+    dcauchy(
+      x,
+      location = 0,
+      scale = 1
+    ) /
+      (
+        pcauchy(10) -
+          pcauchy(-10)
+      ),
+    from = -10,
+    to = 10,
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The central histograms make the main shape easier to see, but they do not remove the Cauchy distribution’s heavy-tail problem. The full distributions still contain extreme observations outside the displayed range.
+
+## Fine-Grained Normal Q-Q Plots
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+par(mfrow = c(2, 2))
+
+for (n in refined_plot_values) {
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  qqnorm(
+    means,
+    main = paste(
+      "Normal Q-Q Plot, n =", n
+    )
+  )
+  
+  qqline(
+    means,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The Q-Q plots continue to show strong departures from the red line, especially in the tails. Increasing \(n\) does not make the points consistently linear.
+
+## Conclusion About Normality
+
+The Cauchy population does not produce a normal sampling distribution of the mean for the tested sample sizes.
+
+The sample means remain heavy-tailed, and extreme values continue to occur even when \(n\) is large. The histograms are difficult to view on the full scale because a few observations can stretch the horizontal axis. The central histograms make the main shape easier to see, but the heavy tails are still present.
+
+The normal Q-Q plots also show strong departures from the red line. The points do not become consistently linear as \(n\) increases.
+
+The simulated medians tend to remain close to zero, and the IQR is more stable than the mean or standard deviation. However, the mean and variance of the Cauchy distribution are undefined, so there is no theoretical standard error for the sample mean.
+
+The value \(n =\) `r least_non_normal_n` had the strongest numerical comparison within the refinement interval, but it should not be considered normal enough. It was only the least non-normal candidate among the values tested.
+
+## CLT Assumptions and Limitations
+
+The Cauchy observations are independent and identically distributed, but the population does not have a finite mean or finite variance.
+
+Because the finite-variance condition is not satisfied, the usual Central Limit Theorem does not apply. Increasing \(n\) does not make the sampling distribution of the mean approximately normal.
+
+This shows why the CLT assumptions are important. The simulation is not failing because of a coding error. Instead, it demonstrates that a population with extremely heavy tails can prevent the sample mean from becoming normally distributed.
+
+The median and IQR are more useful than the mean and standard deviation for describing the Cauchy population because they are less affected by extreme observations.
+
+## Final Conclusion
+
+The Cauchy distribution did not produce a normal sampling distribution of the mean for any of the tested sample sizes.
+
+The population has no finite mean or variance, so the ordinary CLT does not apply. The sample means continued to show heavy tails, extreme outliers, and non-linear Q-Q plots as \(n\) increased.
+
+Although \(n =\) `r least_non_normal_n` had the strongest numerical comparison within the refinement interval, it was not normal enough in the usual CLT sense. This result demonstrates why finite mean and finite variance are necessary conditions for the Central Limit Theorem.

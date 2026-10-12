@@ -1,0 +1,396 @@
+---
+title: "Central Limit Theorem Project Summary"
+author: "Barbara Amezquita"
+format: html
+---
+
+## Project Overview
+
+This project investigated how the sampling distribution of the mean changes as the sample size \(n\) increases for five different populations.
+
+The goal was to determine the smallest sample size at which each sampling distribution appeared approximately normal. I used the histogram, normal Q-Q plot, simulated mean, simulated standard deviation, theoretical standard error, skewness, kurtosis, outliers, and tail behavior to make each decision.
+
+For populations with a finite mean and variance, the theoretical standard error is:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{\sigma}{\sqrt{n}}.
+$$
+
+I first examined a broad range of sample sizes:
+
+$$
+n = 1, 2, 5, 10, 20, 30, 50, 100.
+$$
+
+I then selected a refinement interval for each population and tested every integer sample size within that interval.
+
+## Simulation Method
+
+For each population, I generated 10,000 repeated samples at each sample size. I calculated the mean of every repeated sample to create a sampling distribution of sample means.
+
+The simulations used the last four digits of my student ID as the random seed:
+
+```{r}
+student_id <- 4160
+reps <- 10000
+```
+
+The following features were compared:
+
+- the histogram;
+- the normal Q-Q plot;
+- the simulated mean;
+- the theoretical mean;
+- the simulated standard deviation;
+- the theoretical standard error;
+- skewness;
+- excess kurtosis;
+- outlier counts; and
+- tail behavior.
+
+## Numerical Comparison of Selected Sample Sizes
+
+The following code reads the saved simulation results and calculates the numerical features for each selected sample size.
+
+```{r}
+calculate_skewness <- function(x) {
+  mean((x - mean(x))^3) / sd(x)^3
+}
+
+calculate_excess_kurtosis <- function(x) {
+  mean((x - mean(x))^4) / sd(x)^4 - 3
+}
+
+calculate_outliers <- function(x) {
+  
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  iqr_value <- q3 - q1
+  
+  sum(
+    x < q1 - 1.5 * iqr_value |
+      x > q3 + 1.5 * iqr_value
+  )
+}
+
+read_selected_means <- function(
+  refined_file,
+  broad_file,
+  selected_n
+) {
+  
+  if (file.exists(refined_file)) {
+    
+    results <- read.csv(refined_file)
+    
+  } else {
+    
+    results <- read.csv(broad_file)
+  }
+  
+  results$sample_mean[
+    results$sample_size_n == selected_n
+  ]
+}
+```
+
+```{r}
+standard_normal_means <- read_selected_means(
+  "standard_normal_refined_sample_means.csv",
+  "standard_normal_broad_sample_means.csv",
+  1
+)
+
+six_sided_die_means <- read_selected_means(
+  "six_sided_die_refined_sample_means.csv",
+  "six_sided_die_broad_sample_means.csv",
+  14
+)
+
+exponential_means <- read_selected_means(
+  "exponential_refined_sample_means.csv",
+  "exponential_broad_sample_means.csv",
+  39
+)
+
+small_binomial_means <- read_selected_means(
+  "small_binomial_refined_sample_means.csv",
+  "small_binomial_broad_sample_means.csv",
+  24
+)
+
+cauchy_means <- read_selected_means(
+  "cauchy_refined_sample_means.csv",
+  "cauchy_broad_sample_means.csv",
+  32
+)
+```
+
+```{r}
+make_finite_variance_row <- function(
+  population_name,
+  selected_n,
+  means,
+  theoretical_mean,
+  theoretical_sd,
+  observation
+) {
+  
+  theoretical_se <-
+    theoretical_sd / sqrt(selected_n)
+  
+  data.frame(
+    Population = population_name,
+    selected_n = selected_n,
+    theoretical_mean = theoretical_mean,
+    theoretical_sd = theoretical_sd,
+    simulated_mean = mean(means),
+    simulated_sd = sd(means),
+    theoretical_se = theoretical_se,
+    skewness = calculate_skewness(means),
+    excess_kurtosis =
+      calculate_excess_kurtosis(means),
+    median = median(means),
+    iqr = IQR(means),
+    outlier_count =
+      calculate_outliers(means),
+    proportion_beyond_three_SE =
+      mean(
+        abs(means - theoretical_mean) >
+          3 * theoretical_se
+      ),
+    key_observation = observation
+  )
+}
+
+make_cauchy_row <- function(
+  means,
+  observation
+) {
+  
+  data.frame(
+    Population = "Cauchy",
+    selected_n = 32,
+    theoretical_mean = NA,
+    theoretical_sd = NA,
+    simulated_mean = NA,
+    simulated_sd = NA,
+    theoretical_se = NA,
+    skewness = NA,
+    excess_kurtosis = NA,
+    median = median(means),
+    iqr = IQR(means),
+    outlier_count =
+      calculate_outliers(means),
+    proportion_beyond_three_SE =
+      mean(abs(means) > 10),
+    key_observation = observation
+  )
+}
+```
+
+```{r}
+comparison_table <- rbind(
+  
+  make_finite_variance_row(
+    population_name = "Standard Normal",
+    selected_n = 1,
+    means = standard_normal_means,
+    theoretical_mean = 0,
+    theoretical_sd = 1,
+    observation =
+      "Already normal at n = 1"
+  ),
+  
+  make_finite_variance_row(
+    population_name = "Six-Sided Die",
+    selected_n = 14,
+    means = six_sided_die_means,
+    theoretical_mean = 3.5,
+    theoretical_sd = sqrt(35 / 12),
+    observation =
+      "Discrete spikes remained, but the overall shape was approximately normal"
+  ),
+  
+  make_finite_variance_row(
+    population_name = "Exponential",
+    selected_n = 39,
+    means = exponential_means,
+    theoretical_mean = 1,
+    theoretical_sd = 1,
+    observation =
+      "Right-skewness decreased and the sampling distribution became approximately normal"
+  ),
+  
+  make_finite_variance_row(
+    population_name = "Small Binomial",
+    selected_n = 24,
+    means = small_binomial_means,
+    theoretical_mean = 0.5,
+    theoretical_sd = sqrt(0.45),
+    observation =
+      "Discrete spikes remained, but the overall shape was approximately normal"
+  ),
+  
+  make_cauchy_row(
+    means = cauchy_means,
+    observation =
+      "Closest candidate, but heavy tails and outliers remained; not normal enough"
+  )
+)
+
+knitr::kable(
+  comparison_table,
+  digits = 4,
+  caption = "Numerical Comparison of Selected Sample Sizes"
+)
+```
+
+## Comparison of Selected Sample Sizes
+
+The table compares the numerical features of the selected sample size for each population.
+
+For the Standard Normal, Six-Sided Die, Exponential, and Small Binomial populations, the simulated standard deviation can be compared with the theoretical standard error.
+
+For the Cauchy population, the theoretical mean, standard deviation, and standard error are undefined. Therefore, the median, IQR, outlier count, and tail proportion are used instead.
+
+The selected values were:
+
+- Standard Normal: \(n=1\);
+- Six-Sided Die: \(n=14\);
+- Exponential: \(n=39\);
+- Small Binomial: \(n=24\); and
+- Cauchy: \(n=32\), which was the closest candidate but was still not normal enough.
+
+## Standard Normal Population
+
+The Standard Normal population is already normally distributed:
+
+$$
+X \sim \mathcal{N}(0,1).
+$$
+
+Because the original population is already normal, the sampling distribution of the mean is normal for every sample size, including \(n=1\).
+
+Increasing \(n\) reduces the standard error:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{1}{\sqrt{n}},
+$$
+
+but increasing \(n\) is not needed to create normality. Therefore, \(n=1\) was sufficient for the Standard Normal population.
+
+## Six-Sided Die Population
+
+The Six-Sided Die population is discrete and flat, with possible values from 1 through 6. Its theoretical mean is 3.5, and its theoretical standard deviation is:
+
+$$
+\sigma
+=
+\sqrt{\frac{35}{12}}.
+$$
+
+The sample means showed small spikes because possible sample means are based on integer totals divided by \(n\). These spikes are expected for a discrete population.
+
+As \(n\) increased, the sampling distributions became smoother, more symmetric, and closer to a bell-shaped curve. The simulated means were close to 3.5, and the simulated standard deviations followed the theoretical standard-error curve.
+
+After refining the search, I selected \(n=14\) as the smallest value that appeared normal enough. At this value, the histogram was approximately bell-shaped, the Q-Q plot was reasonably linear, and the numerical diagnostics supported the visual evidence.
+
+## Exponential Population
+
+The Exponential population with rate parameter \(\lambda=1\) has a mean and standard deviation of 1. It is strongly right-skewed and has excess kurtosis of 6.
+
+The smaller sample sizes produced sampling distributions that were still affected by the population’s right-skewness. As \(n\) increased, the sample means became more symmetric and closer to a normal shape.
+
+After refining the search, I selected \(n=39\) as the smallest value that appeared normal enough.
+
+At this sample size, the histogram was approximately bell-shaped, the Q-Q plot was reasonably close to a straight line, and the simulated mean was close to the theoretical mean of 1. The simulated standard deviation was also close to:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{1}{\sqrt{39}}.
+$$
+
+Some right-tail behavior remained because the original Exponential population is skewed, but the effect became less influential as \(n\) increased.
+
+## Small Binomial Population
+
+The Small Binomial population follows:
+
+$$
+X \sim \operatorname{Binomial}(5,0.10).
+$$
+
+Its theoretical mean is:
+
+$$
+\mu
+=
+np
+=
+5(0.10)
+=
+0.5.
+$$
+
+Its theoretical variance is:
+
+$$
+\sigma^2
+=
+np(1-p)
+=
+5(0.10)(0.90)
+=
+0.45.
+$$
+
+The population is discrete and right-skewed because most observations are zero while larger numbers of successes are less common.
+
+The smaller sample sizes produced histograms with visible spikes because the sample means could only take certain discrete values. As \(n\) increased, the sampling distribution became smoother and more symmetric.
+
+After refining the search, I selected \(n=24\) as the smallest value that appeared normal enough.
+
+At this value, the histogram was approximately bell-shaped overall, the Q-Q plot was reasonably linear, and the simulated mean was close to 0.5. The simulated standard deviation was close to:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{\sqrt{0.45}}{\sqrt{24}}.
+$$
+
+The remaining spikes were caused by the discrete nature of the Binomial population and did not automatically mean that the sampling distribution was not normal enough.
+
+## Cauchy Population
+
+The Standard Cauchy population is symmetric around zero but has extremely heavy tails.
+
+The Cauchy distribution does not have a finite mean or variance. Therefore, the ordinary CLT does not apply to sample means from this population.
+
+The Cauchy sample means continued to show extreme values, heavy tails, and outliers even as \(n\) increased. The normal Q-Q plots did not become consistently linear, and the full histograms were difficult to view because extreme values stretched the horizontal axis.
+
+Among the tested values, \(n=32\) was the closest candidate to appearing normal. However, it was still not normal enough because the heavy tails, extreme values, and Q-Q plot continued to show clear departures from normality.
+
+Therefore, \(n=32\) was not treated as a successful CLT result. Instead, it demonstrated that increasing \(n\) does not produce an approximately normal sampling distribution when the population does not have a finite mean or variance.
+
+
+## Overall Conclusion
+
+The results showed that the sample size needed for an approximately normal sampling distribution depends on the original population.
+
+The Standard Normal population required no increase in sample size because it was already normal, so \(n=1\) was sufficient.
+
+The Six-Sided Die became normal enough at \(n=14\). Its discrete structure caused visible spikes, but the overall shape became approximately bell-shaped, and the Q-Q plot and numerical diagnostics supported the conclusion.
+
+The Exponential population required a larger sample size because it began strongly right-skewed. I selected \(n=39\) as the smallest value that appeared normal enough.
+
+The Small Binomial population was also discrete and right-skewed. I selected \(n=24\) as the smallest value that appeared normal enough.
+
+The Cauchy population was different from the other distributions. Although \(n=32\) was the closest candidate, it was still not normal enough. The Cauchy distribution has no finite mean or variance, so the ordinary CLT does not apply.
+
+These results show that \(n=30\) is not a universal rule. The sample size needed depends on the population’s original shape and whether the CLT assumptions are satisfied. Populations with finite means and variances became approximately normal at different rates, while the Cauchy population did not become normal enough within the tested range.

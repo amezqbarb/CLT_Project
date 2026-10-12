@@ -1,0 +1,798 @@
+---
+title: "Small Binomial Distribution"
+author: "Barbara Amezquita"
+format: html
+---
+
+## Theoretical Expectations
+
+The population follows a Binomial distribution with 5 trials and success probability 0.10:
+
+$$
+X \sim \operatorname{Binomial}(5, 0.10)
+$$
+
+```{r}
+population_values <- 0:5
+population_size <- 5
+population_probability <- 0.10
+
+population_probabilities <- dbinom(
+  population_values,
+  size = population_size,
+  prob = population_probability
+)
+
+population_mean <-
+  population_size * population_probability
+
+population_variance <-
+  population_size *
+    population_probability *
+    (1 - population_probability)
+
+population_sd <- sqrt(population_variance)
+
+population_skewness <-
+  (1 - 2 * population_probability) /
+    sqrt(
+      population_size *
+        population_probability *
+        (1 - population_probability)
+    )
+
+population_excess_kurtosis <-
+  (
+    1 -
+      6 *
+        population_probability *
+        (1 - population_probability)
+  ) /
+    (
+      population_size *
+        population_probability *
+        (1 - population_probability)
+    )
+
+theoretical_values <- data.frame(
+  mean = population_mean,
+  variance = population_variance,
+  standard_deviation = population_sd,
+  skewness = population_skewness,
+  excess_kurtosis = population_excess_kurtosis
+)
+
+knitr::kable(
+  theoretical_values,
+  digits = 4,
+  caption = "Theoretical Values for the Small Binomial Population"
+)
+```
+
+The theoretical mean is:
+
+$$
+\mu = np = 5(0.10) = 0.5.
+$$
+
+The theoretical variance is:
+
+$$
+\sigma^2 = np(1-p)
+= 5(0.10)(0.90)
+= 0.45.
+$$
+
+The theoretical standard deviation is:
+
+$$
+\sigma = \sqrt{0.45}.
+$$
+
+The population is right-skewed because the probability of success is small. Most observations are expected to be close to zero, while larger numbers of successes are less common.
+
+The theoretical standard error is:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{\sigma}{\sqrt{n}}
+=
+\frac{\sqrt{0.45}}{\sqrt{n}}.
+$$
+
+## Prediction for the Small Binomial Population
+
+The original Binomial population is discrete and right-skewed. I expect the sampling distribution of the mean to become more symmetric and approximately normal as $n$ increases.
+
+Because the success probability is only 0.10, most observations are zero. Therefore, I expect smaller sample sizes to show noticeable spikes and right-skewness. As $n$ increases, the sample means should become smoother, more bell-shaped, and closer to the theoretical mean of 0.5.
+
+## Original Population Distribution
+
+```{r}
+barplot(
+  population_probabilities,
+  names.arg = population_values,
+  col = "lightblue",
+  main = "Population Distribution of Binomial(5, 0.10)",
+  xlab = "Number of successes",
+  ylab = "Probability"
+)
+```
+
+The original population is discrete and strongly concentrated at zero. The probabilities become smaller as the number of successes increases. This creates a right-skewed population rather than a symmetric bell-shaped population.
+
+## Reproducible Simulation Setup
+
+The last four digits of my student ID are 4160.
+
+```{r}
+student_id <- 4160
+reps <- 10000
+
+broad_n_values <- c(
+  1, 5, 10, 20, 30, 50, 75, 100
+)
+
+binomial_generator <- function(n) {
+  rbinom(
+    n,
+    size = population_size,
+    prob = population_probability
+  )
+}
+
+simulate_means <- function(n, reps = 10000) {
+  replicate(
+    reps,
+    mean(binomial_generator(n))
+  )
+}
+
+run_simulations <- function(n_values, reps = 10000) {
+  
+  results <- list()
+  
+  for (n in n_values) {
+    
+    cat("Running simulation for n =", n, "\n")
+    
+    results[[paste0("n_", n)]] <- simulate_means(
+      n = n,
+      reps = reps
+    )
+  }
+  
+  results
+}
+```
+
+Here, $n$ is the number of independent Binomial observations in one sample. The value `reps` is the number of repeated samples used to create each sampling distribution.
+
+## Broad-Range Simulations
+
+The seed is reset immediately before running the simulations so that the results are reproducible.
+
+```{r}
+set.seed(student_id)
+
+broad_means <- run_simulations(
+  n_values = broad_n_values,
+  reps = reps
+)
+```
+
+Each value of $n$ produces 10,000 simulated sample means.
+
+## Checking the Number of Simulations
+
+```{r}
+broad_simulation_check <- data.frame(
+  sample_size_n = broad_n_values,
+  number_of_sample_means = sapply(
+    broad_means,
+    length
+  )
+)
+
+knitr::kable(
+  broad_simulation_check,
+  digits = 0,
+  caption = "Broad-Range Simulation Counts"
+)
+```
+
+Each sample size has the same number of simulated sample means, so the simulations were completed as expected.
+
+## Saving the Broad-Range Sample Means
+
+```{r}
+convert_to_long_format <- function(
+  means_list,
+  n_values,
+  range_label
+) {
+  
+  do.call(
+    rbind,
+    lapply(seq_along(n_values), function(i) {
+      
+      data.frame(
+        range = range_label,
+        sample_size_n = n_values[i],
+        repetition = seq_len(
+          length(means_list[[i]])
+        ),
+        sample_mean = means_list[[i]]
+      )
+    })
+  )
+}
+
+broad_means_long <- convert_to_long_format(
+  means_list = broad_means,
+  n_values = broad_n_values,
+  range_label = "broad"
+)
+
+write.csv(
+  broad_means_long,
+  "small_binomial_broad_sample_means.csv",
+  row.names = FALSE
+)
+```
+
+## Diagnostic Functions
+
+```{r}
+calculate_skewness <- function(x) {
+  
+  mean((x - mean(x))^3) / sd(x)^3
+}
+
+calculate_excess_kurtosis <- function(x) {
+  
+  mean((x - mean(x))^4) / sd(x)^4 - 3
+}
+
+calculate_outliers <- function(x) {
+  
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  iqr_value <- q3 - q1
+  
+  sum(
+    x < q1 - 1.5 * iqr_value |
+      x > q3 + 1.5 * iqr_value
+  )
+}
+
+calculate_diagnostics <- function(
+  means_list,
+  n_values
+) {
+  
+  simulated_means <- sapply(
+    means_list,
+    mean
+  )
+  
+  simulated_standard_errors <- sapply(
+    means_list,
+    sd
+  )
+  
+  theoretical_standard_errors <-
+    population_sd / sqrt(n_values)
+  
+  tail_proportions <- sapply(
+    seq_along(n_values),
+    function(i) {
+      
+      mean(
+        abs(
+          means_list[[i]] - population_mean
+        ) >
+          3 * theoretical_standard_errors[i]
+      )
+    }
+  )
+  
+  results <- data.frame(
+    sample_size_n = n_values,
+    
+    simulated_mean = simulated_means,
+    
+    theoretical_mean =
+      rep(
+        population_mean,
+        length(n_values)
+      ),
+    
+    mean_error =
+      simulated_means - population_mean,
+    
+    simulated_standard_error =
+      simulated_standard_errors,
+    
+    theoretical_standard_error =
+      theoretical_standard_errors,
+    
+    relative_standard_error_error =
+      abs(
+        simulated_standard_errors -
+          theoretical_standard_errors
+      ) / theoretical_standard_errors,
+    
+    skewness = sapply(
+      means_list,
+      calculate_skewness
+    ),
+    
+    excess_kurtosis = sapply(
+      means_list,
+      calculate_excess_kurtosis
+    ),
+    
+    outlier_count = sapply(
+      means_list,
+      calculate_outliers
+    ),
+    
+    proportion_beyond_three_theoretical_SE =
+      tail_proportions
+  )
+  
+  results
+}
+```
+
+## Broad-Range Diagnostics
+
+```{r}
+broad_diagnostics <- calculate_diagnostics(
+  means_list = broad_means,
+  n_values = broad_n_values
+)
+
+knitr::kable(
+  broad_diagnostics,
+  digits = 4,
+  caption = "Broad-Range Diagnostic Results"
+)
+```
+
+This table allows me to compare the simulated mean, standard error, skewness, kurtosis, outliers, and tail behavior for each sample size.
+
+As $n$ increases, the simulated mean should remain close to the theoretical mean of 0.5. The simulated standard error should become closer to the theoretical standard error. The skewness and excess kurtosis should also move closer to zero as the sampling distribution becomes more normal.
+
+## Broad-Range Histograms
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+broad_histogram_values <- c(
+  1, 10, 30, 100
+)
+
+par(mfrow = c(2, 2))
+
+for (n in broad_histogram_values) {
+  
+  means <- broad_means[[paste0("n_", n)]]
+  
+  hist(
+    means,
+    breaks = 40,
+    probability = TRUE,
+    main = paste(
+      "Sampling Distribution, n =", n
+    ),
+    xlab = "Sample mean",
+    col = "lightblue",
+    border = "white"
+  )
+  
+  curve(
+    dnorm(
+      x,
+      mean = population_mean,
+      sd = population_sd / sqrt(n)
+    ),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+For small values of $n$, the histograms are concentrated around a few possible sample means and may show visible spikes. This happens because the original Binomial population is discrete.
+
+As $n$ increases, the sample means can take more possible values. The histogram becomes smoother, more symmetric, and closer to the red normal curve.
+
+## Broad-Range Normal Q-Q Plots
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+par(mfrow = c(2, 2))
+
+for (n in broad_histogram_values) {
+  
+  means <- broad_means[[paste0("n_", n)]]
+  
+  qqnorm(
+    means,
+    main = paste(
+      "Normal Q-Q Plot, n =", n
+    )
+  )
+  
+  qqline(
+    means,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+For smaller values of $n$, the points may curve away from the red line because the sampling distribution is still right-skewed and discrete.
+
+As $n$ increases, the points should follow the red line more closely. This suggests that the sampling distribution is becoming more similar to a normal distribution.
+
+## Broad-Range Standard-Error Comparison
+
+```{r}
+plot(
+  broad_diagnostics$sample_size_n,
+  broad_diagnostics$simulated_standard_error,
+  type = "b",
+  pch = 19,
+  log = "x",
+  xlab = "Sample size n",
+  ylab = "Standard deviation of sample means",
+  main = "Broad-Range Standard-Error Comparison"
+)
+
+lines(
+  broad_diagnostics$sample_size_n,
+  broad_diagnostics$theoretical_standard_error,
+  type = "b",
+  col = "red",
+  pch = 17
+)
+
+legend(
+  "topright",
+  legend = c(
+    "Simulated standard error",
+    "Theoretical standard error"
+  ),
+  col = c("black", "red"),
+  pch = c(19, 17),
+  lty = 1
+)
+```
+
+The simulated standard errors should generally follow the theoretical curve. The theoretical standard error decreases as $n$ increases because averaging more observations reduces the spread of the sample means.
+
+## Choosing the Refinement Interval
+
+The broad results suggested that $n = 10$ was still noticeably discrete and right-skewed, while $n = 30$ appeared closer to normal. Therefore, I refined the search between these two values.
+
+```{r}
+refinement_lower <- 10
+refinement_upper <- 30
+
+refined_n_values <- seq(
+  refinement_lower,
+  refinement_upper,
+  by = 1
+)
+
+refined_n_values
+```
+
+This tests every integer sample size from $n = 10$ through $n = 30$ so that I can identify the smallest value that appears normal enough.
+
+## Fine-Grained Simulations
+
+```{r}
+set.seed(student_id)
+
+refined_means <- run_simulations(
+  n_values = refined_n_values,
+  reps = reps
+)
+```
+
+## Fine-Grained Diagnostics
+
+```{r}
+refined_diagnostics <- calculate_diagnostics(
+  means_list = refined_means,
+  n_values = refined_n_values
+)
+
+knitr::kable(
+  refined_diagnostics,
+  digits = 4,
+  caption = "Fine-Grained Diagnostic Results"
+)
+```
+
+## Comparing Refined Sample Sizes
+
+The goal is to select the smallest sample size that appears normal enough. The numerical criteria support the visual evidence from the histograms and Q-Q plots.
+
+```{r}
+qq_correlations <- c()
+
+for (i in 1:length(refined_n_values)) {
+  
+  n <- refined_n_values[i]
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  probabilities <- (
+    (1:length(means)) - 0.5
+  ) / length(means)
+  
+  theoretical_quantiles <- qnorm(
+    probabilities
+  )
+  
+  qq_correlations[i] <- cor(
+    sort(means),
+    theoretical_quantiles
+  )
+}
+
+refined_diagnostics$absolute_mean_error <-
+  abs(
+    refined_diagnostics$mean_error
+  )
+
+refined_diagnostics$absolute_standard_error_error <-
+  abs(
+    refined_diagnostics$simulated_standard_error -
+      refined_diagnostics$theoretical_standard_error
+  )
+
+refined_diagnostics$qq_correlation <-
+  qq_correlations
+```
+
+```{r}
+refined_diagnostics$mean_error_rank <- rank(
+  refined_diagnostics$absolute_mean_error,
+  ties.method = "min"
+)
+
+refined_diagnostics$standard_error_rank <- rank(
+  refined_diagnostics$absolute_standard_error_error,
+  ties.method = "min"
+)
+
+refined_diagnostics$qq_rank <- rank(
+  -refined_diagnostics$qq_correlation,
+  ties.method = "min"
+)
+
+refined_diagnostics$total_score <-
+  refined_diagnostics$mean_error_rank +
+    refined_diagnostics$standard_error_rank +
+    refined_diagnostics$qq_rank
+```
+
+The following criteria identify sample sizes that are normal enough based on their skewness, excess kurtosis, and standard-error accuracy.
+
+```{r}
+normal_enough_rows <- refined_diagnostics[
+  abs(
+    refined_diagnostics$skewness
+  ) < 0.25 &
+    abs(
+      refined_diagnostics$excess_kurtosis
+    ) < 0.50 &
+    refined_diagnostics$relative_standard_error_error < 0.05,
+]
+```
+
+The selected sample size is the smallest value that meets all of the numerical criteria.
+
+```{r}
+if (nrow(normal_enough_rows) > 0) {
+  
+  selected_n <- min(
+    normal_enough_rows$sample_size_n
+  )
+  
+} else {
+  
+  selected_n <- refined_n_values[
+    which.min(
+      refined_diagnostics$total_score
+    )
+  ]
+  
+  cat(
+    "No sample size met every numerical criterion.",
+    "The lowest-scoring sample size was selected for visual review."
+  )
+}
+
+selected_n
+```
+
+```{r}
+comparison_table <- refined_diagnostics[
+  order(
+    refined_diagnostics$sample_size_n
+  ),
+]
+
+knitr::kable(
+  comparison_table,
+  digits = 4,
+  caption = "Comparison of Refined Sample Sizes"
+)
+```
+
+## Saving the Refined Sample Means
+
+```{r}
+refined_means_long <- convert_to_long_format(
+  means_list = refined_means,
+  n_values = refined_n_values,
+  range_label = "refined"
+)
+
+write.csv(
+  refined_means_long,
+  "small_binomial_refined_sample_means.csv",
+  row.names = FALSE
+)
+```
+
+## Fine-Grained Histograms
+
+The following plots show the lower refinement bound, the selected sample size, and the upper refinement bound.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+refined_plot_values <- sort(
+  unique(
+    c(
+      refinement_lower,
+      selected_n,
+      refinement_upper
+    )
+  )
+)
+
+par(mfrow = c(2, 2))
+
+for (n in refined_plot_values) {
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  hist(
+    means,
+    breaks = 40,
+    probability = TRUE,
+    main = paste(
+      "Histogram, n =", n
+    ),
+    xlab = "Sample mean",
+    col = "lightblue",
+    border = "white"
+  )
+  
+  curve(
+    dnorm(
+      x,
+      mean = population_mean,
+      sd = population_sd / sqrt(n)
+    ),
+    add = TRUE,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The histogram for the lower boundary may still show spikes and right-skewness because the sample means are based on a discrete population. The histogram for the selected sample size should be more balanced and approximately bell-shaped. The upper boundary shows how the shape changes for a larger sample size.
+
+## Fine-Grained Normal Q-Q Plots
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+par(mfrow = c(2, 2))
+
+for (n in refined_plot_values) {
+  
+  means <- refined_means[[paste0("n_", n)]]
+  
+  qqnorm(
+    means,
+    main = paste(
+      "Normal Q-Q Plot, n =", n
+    )
+  )
+  
+  qqline(
+    means,
+    col = "red",
+    lwd = 2
+  )
+}
+
+par(mfrow = c(1, 1))
+```
+
+The Q-Q plot for the lower boundary may still curve away from the red line. The Q-Q plot for the selected sample size should be closer to a straight line. The upper boundary provides a comparison with a larger sample size.
+
+## Selected Sample Size
+
+For the Small Binomial Population, I selected $n =$ `r selected_n` as the smallest sample size that appeared normal enough.
+
+For the broad investigation, I examined $n = 1, 5, 10, 20, 30, 50, 75,$ and $100$. I compared the histograms, normal Q-Q plots, skewness, kurtosis, simulated standard errors, and tail behavior for these sample sizes.
+
+The broad results showed that the smaller sample sizes were concentrated around a few possible sample means and were affected by the right-skewed Binomial population. I then refined the search between $n = 10$ and $n = 30$ and tested every integer sample size in that interval.
+
+The selected sample size was $n =$ `r selected_n`. Its histogram was more balanced and approximately bell-shaped than the histograms for the smaller sample sizes. Some small spikes may still appear because the original Binomial population is discrete, but the overall shape was closer to normal.
+
+The normal Q-Q plot for $n =$ `r selected_n` was reasonably close to a straight line. This supported the conclusion from the histogram that the sampling distribution was approximately normal.
+
+The skewness at the selected sample size was closer to zero than it was for the smaller sample sizes. The excess kurtosis was also closer to zero, showing that the sampling distribution was becoming more similar to a normal distribution.
+
+The simulated mean was close to the theoretical population mean of 0.5. The simulated standard error was also close to the theoretical standard error:
+
+$$
+\operatorname{SE}(\overline{X})
+=
+\frac{\sqrt{0.45}}{\sqrt{`r selected_n`}}.
+$$
+
+The discrete nature of the population caused some spikes in the histograms, but these spikes did not prevent the overall distribution from appearing approximately normal. There was no major outlier or tail pattern that changed my decision.
+
+The numerical comparison supported the visual evidence by considering the mean error, standard-error error, and Q-Q plot straightness. I selected the smallest sample size that met the numerical criteria and also looked normal enough in the plots.
+
+## CLT Assumptions and Limitations
+
+The Binomial observations are independent and identically distributed, and the population has a finite mean and finite variance. Therefore, the usual Central Limit Theorem applies.
+
+The original Binomial population is discrete and right-skewed because the probability of success is only 0.10. As the sample size increases, averaging the observations makes the sampling distribution more symmetric and approximately normal.
+
+The histograms may still show small spikes because the original observations can only take integer values. These spikes are expected from the discrete population and do not automatically mean that the sampling distribution is not normal enough.
+
+The definition of “normal enough” is somewhat subjective. It depends on the histogram, Q-Q plot, numerical diagnostics, and how closely the simulated results match the theoretical values. Different reasonable criteria could lead to slightly different choices of $n$.
+
+## Conclusion
+
+For the Small Binomial Population, I selected $n =$ `r selected_n` as the smallest sample size that appeared normal enough.
+
+The original Binomial population was discrete and right-skewed, with most observations equal to zero. As the sample size increased, the sampling distribution of the mean became more symmetric and more similar to a normal distribution.
+
+At the selected sample size, the histogram was approximately bell-shaped overall, even though it could still contain small spikes. The normal Q-Q plot was reasonably close to a straight line. The simulated mean was close to the theoretical mean of 0.5, and the simulated standard error was close to the theoretical value:
+
+$$
+\frac{\sqrt{0.45}}{\sqrt{n}}.
+$$
+
+The skewness and excess kurtosis were closer to zero than they were for smaller sample sizes. Outliers and tail behavior did not have a major effect on the decision.
+
+Therefore, $n =$ `r selected_n` was my evidence-based choice for when the Small Binomial sampling distribution became normal enough.

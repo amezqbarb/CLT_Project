@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Barbara Amezquita">
+
+<title>Cauchy Population</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="cauchy_files/libs/clipboard/clipboard.min.js"></script>
+<script src="cauchy_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="cauchy_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="cauchy_files/libs/quarto-html/popper.min.js"></script>
+<script src="cauchy_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="cauchy_files/libs/quarto-html/anchor.min.js"></script>
+<link href="cauchy_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="cauchy_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="cauchy_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="cauchy_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="cauchy_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Cauchy Population</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Barbara Amezquita </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="theoretical-expectations" class="level2">
+<h2 class="anchored" data-anchor-id="theoretical-expectations">Theoretical Expectations</h2>
+<p>The population follows a standard Cauchy distribution:</p>
+<p><span class="math display">\[
+X \sim \operatorname{Cauchy}(0,1)
+\]</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>population_location <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>population_scale <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>population_mean <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>population_variance <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>population_sd <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>population_skewness <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>population_excess_kurtosis <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>population_median <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>population_iqr <span class="ot">&lt;-</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The Cauchy distribution has extremely heavy tails. Its theoretical mean, variance, standard deviation, skewness, and kurtosis are undefined.</p>
+<p>Because the Cauchy population does not have a finite mean or variance, the ordinary Central Limit Theorem does not apply to its sample means. This means that increasing the sample size does not guarantee that the sampling distribution will become approximately normal.</p>
+<p>The median of the standard Cauchy distribution is 0. Its first quartile is (-1), and its third quartile is (1), so its theoretical interquartile range is:</p>
+<p><span class="math display">\[
+\operatorname{IQR}
+=
+Q_3 - Q_1
+=
+1 - (-1)
+=
+2.
+\]</span></p>
+</section>
+<section id="prediction-for-the-cauchy-population" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-for-the-cauchy-population">Prediction for the Cauchy Population</h2>
+<p>The original Cauchy population is symmetric around zero, but it has extremely heavy tails. I do not expect the sampling distribution of the mean to become approximately normal as (n) increases.</p>
+<p>The Cauchy distribution is an important exception to the Central Limit Theorem because it does not have a finite mean or variance. I expect the sample means to continue showing extreme values, large outliers, and heavy tails even for larger sample sizes.</p>
+</section>
+<section id="original-population-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="original-population-distribution">Original Population Distribution</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dcauchy</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    x,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> population_location,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">scale =</span> population_scale</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="sc">-</span><span class="dv">10</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> <span class="dv">10</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"blue"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Standard Cauchy Population Distribution"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Population value"</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Density"</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cauchy_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Cauchy distribution is symmetric and centered at zero. However, it has much heavier tails than a normal distribution. This means that extremely large positive and negative values are more likely than they would be under a normal distribution.</p>
+</section>
+<section id="reproducible-simulation-setup" class="level2">
+<h2 class="anchored" data-anchor-id="reproducible-simulation-setup">Reproducible Simulation Setup</h2>
+<p>The last four digits of my student ID are 4160.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>student_id <span class="ot">&lt;-</span> <span class="dv">4160</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>reps <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>broad_n_values <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">100</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>cauchy_generator <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rcauchy</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    n,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> population_location,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">scale =</span> population_scale</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>simulate_means <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">reps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replicate</span>(</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    reps,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(<span class="fu">cauchy_generator</span>(n))</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>run_simulations <span class="ot">&lt;-</span> <span class="cf">function</span>(n_values, <span class="at">reps =</span> <span class="dv">10000</span>) {</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> n_values) {</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Running simulation for n ="</span>, n, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    results[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]] <span class="ot">&lt;-</span> <span class="fu">simulate_means</span>(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> n,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">reps =</span> reps</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  results</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Here, (n) is the number of Cauchy observations in one sample. The value <code>reps</code> is the number of repeated samples.</p>
+</section>
+<section id="broad-range-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-simulations">Broad-Range Simulations</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(student_id)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>broad_means <span class="ot">&lt;-</span> <span class="fu">run_simulations</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> broad_n_values,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">reps =</span> reps</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running simulation for n = 1 
+Running simulation for n = 5 
+Running simulation for n = 10 
+Running simulation for n = 20 
+Running simulation for n = 30 
+Running simulation for n = 50 
+Running simulation for n = 75 
+Running simulation for n = 100 </code></pre>
+</div>
+</div>
+<p>Each value of (n) produces 10,000 simulated sample means.</p>
+</section>
+<section id="checking-the-number-of-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="checking-the-number-of-simulations">Checking the Number of Simulations</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>broad_simulation_check <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_size_n =</span> broad_n_values,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">number_of_sample_means =</span> <span class="fu">sapply</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    broad_means,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    length</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  broad_simulation_check,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">0</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Broad-Range Simulation Counts"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Broad-Range Simulation Counts</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">number_of_sample_means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_20</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_75</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_100</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">10000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Each sample size has the same number of simulated sample means, so the simulations were completed as expected.</p>
+</section>
+<section id="saving-the-broad-range-sample-means" class="level2">
+<h2 class="anchored" data-anchor-id="saving-the-broad-range-sample-means">Saving the Broad-Range Sample Means</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>convert_to_long_format <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  means_list,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  n_values,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  range_label</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    rbind,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lapply</span>(<span class="fu">seq_along</span>(n_values), <span class="cf">function</span>(i) {</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">range =</span> range_label,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">sample_size_n =</span> n_values[i],</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">repetition =</span> <span class="fu">seq_len</span>(</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>          <span class="fu">length</span>(means_list[[i]])</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">sample_mean =</span> means_list[[i]]</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>broad_means_long <span class="ot">&lt;-</span> <span class="fu">convert_to_long_format</span>(</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> broad_means,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> broad_n_values,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">range_label =</span> <span class="st">"broad"</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  broad_means_long,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cauchy_broad_sample_means.csv"</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="diagnostic-functions" class="level2">
+<h2 class="anchored" data-anchor-id="diagnostic-functions">Diagnostic Functions</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>calculate_outliers <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.25</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fl">0.75</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  iqr_value <span class="ot">&lt;-</span> q3 <span class="sc">-</span> q1</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">&lt;</span> q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr_value <span class="sc">|</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      x <span class="sc">&gt;</span> q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> iqr_value</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>calculate_qq_correlation <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  probabilities <span class="ot">&lt;-</span> (</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x)) <span class="sc">-</span> <span class="fl">0.5</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">/</span> <span class="fu">length</span>(x)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  theoretical_quantiles <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    probabilities</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sort</span>(x),</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    theoretical_quantiles</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>calculate_cauchy_diagnostics <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  means_list,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  n_values</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>) {</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  simulated_means <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    mean</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  simulated_medians <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    median</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  simulated_iqrs <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    IQR</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>  outlier_counts <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    calculate_outliers</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>  qq_correlations <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>    calculate_qq_correlation</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>  tail_proportions <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    means_list,</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x) {</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(<span class="fu">abs</span>(x) <span class="sc">&gt;</span> <span class="dv">10</span>)</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_size_n =</span> n_values,</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">simulated_mean =</span> simulated_means,</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">simulated_median =</span> simulated_medians,</span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_error =</span></span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>      simulated_medians <span class="sc">-</span> population_median,</span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">simulated_iqr =</span> simulated_iqrs,</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">iqr_error =</span></span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>      simulated_iqrs <span class="sc">-</span> population_iqr,</span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">outlier_count =</span> outlier_counts,</span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">proportion_beyond_absolute_value_10 =</span></span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>      tail_proportions,</span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">qq_correlation =</span> qq_correlations</span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>  results</span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="broad-range-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-diagnostics">Broad-Range Diagnostics</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>broad_diagnostics <span class="ot">&lt;-</span> <span class="fu">calculate_cauchy_diagnostics</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> broad_means,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> broad_n_values</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Broad-Range Cauchy Diagnostic Results"</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Broad-Range Cauchy Diagnostic Results</caption>
+<colgroup>
+<col style="width: 3%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 23%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">simulated_mean</th>
+<th style="text-align: right;">simulated_median</th>
+<th style="text-align: right;">median_error</th>
+<th style="text-align: right;">simulated_iqr</th>
+<th style="text-align: right;">iqr_error</th>
+<th style="text-align: right;">outlier_count</th>
+<th style="text-align: right;">proportion_beyond_absolute_value_10</th>
+<th style="text-align: right;">qq_correlation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-5.1557</td>
+<td style="text-align: right;">-0.0117</td>
+<td style="text-align: right;">-0.0117</td>
+<td style="text-align: right;">2.0060</td>
+<td style="text-align: right;">0.0060</td>
+<td style="text-align: right;">1508</td>
+<td style="text-align: right;">0.0626</td>
+<td style="text-align: right;">0.0677</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-0.2107</td>
+<td style="text-align: right;">-0.0250</td>
+<td style="text-align: right;">-0.0250</td>
+<td style="text-align: right;">1.9757</td>
+<td style="text-align: right;">-0.0243</td>
+<td style="text-align: right;">1538</td>
+<td style="text-align: right;">0.0631</td>
+<td style="text-align: right;">0.1278</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">-0.6402</td>
+<td style="text-align: right;">-0.0038</td>
+<td style="text-align: right;">-0.0038</td>
+<td style="text-align: right;">2.0228</td>
+<td style="text-align: right;">0.0228</td>
+<td style="text-align: right;">1547</td>
+<td style="text-align: right;">0.0649</td>
+<td style="text-align: right;">0.1156</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_20</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.8036</td>
+<td style="text-align: right;">0.0011</td>
+<td style="text-align: right;">0.0011</td>
+<td style="text-align: right;">1.9694</td>
+<td style="text-align: right;">-0.0306</td>
+<td style="text-align: right;">1597</td>
+<td style="text-align: right;">0.0608</td>
+<td style="text-align: right;">0.1014</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">-0.7473</td>
+<td style="text-align: right;">-0.0098</td>
+<td style="text-align: right;">-0.0098</td>
+<td style="text-align: right;">1.9983</td>
+<td style="text-align: right;">-0.0017</td>
+<td style="text-align: right;">1529</td>
+<td style="text-align: right;">0.0572</td>
+<td style="text-align: right;">0.3029</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">1.4711</td>
+<td style="text-align: right;">-0.0243</td>
+<td style="text-align: right;">-0.0243</td>
+<td style="text-align: right;">1.9993</td>
+<td style="text-align: right;">-0.0007</td>
+<td style="text-align: right;">1602</td>
+<td style="text-align: right;">0.0651</td>
+<td style="text-align: right;">0.1123</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_75</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">0.5633</td>
+<td style="text-align: right;">0.0033</td>
+<td style="text-align: right;">0.0033</td>
+<td style="text-align: right;">2.0124</td>
+<td style="text-align: right;">0.0124</td>
+<td style="text-align: right;">1516</td>
+<td style="text-align: right;">0.0614</td>
+<td style="text-align: right;">0.1901</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_100</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">-0.6792</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">1.9914</td>
+<td style="text-align: right;">-0.0086</td>
+<td style="text-align: right;">1536</td>
+<td style="text-align: right;">0.0604</td>
+<td style="text-align: right;">0.1796</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Because the Cauchy population has no finite mean or variance, the simulated means and standard errors cannot be compared with theoretical values.</p>
+<p>Instead, I use the median, interquartile range, outlier counts, extreme tails, and Q-Q plots to study the sampling distributions.</p>
+</section>
+<section id="broad-range-histograms" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-histograms">Broad-Range Histograms</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>broad_histogram_values <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">100</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> broad_histogram_values) {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> broad_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  central_means <span class="ot">&lt;-</span> means[</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    means <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">10</span> <span class="sc">&amp;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      means <span class="sc">&lt;=</span> <span class="dv">10</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    central_means,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="dv">40</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Central Histogram, n ="</span>, n</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Sample mean"</span>,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">border =</span> <span class="st">"white"</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dcauchy</span>(</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>      x,</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">location =</span> <span class="dv">0</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">scale =</span> <span class="dv">1</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">/</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>      (</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pcauchy</span>(<span class="dv">10</span>) <span class="sc">-</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>          <span class="fu">pcauchy</span>(<span class="sc">-</span><span class="dv">10</span>)</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">from =</span> <span class="sc">-</span><span class="dv">10</span>,</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">to =</span> <span class="dv">10</span>,</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cauchy_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The histograms are displayed over the central region so that the main shape can be seen more clearly. The full histograms are difficult to read because a few extremely large values can stretch the horizontal axis.</p>
+<p>Even after focusing on the central region, the distributions still show the effects of the heavy tails. Increasing (n) does not remove the extreme-value behavior because the Cauchy distribution remains Cauchy when sample means are taken.</p>
+</section>
+<section id="broad-range-normal-q-q-plots" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-normal-q-q-plots">Broad-Range Normal Q-Q Plots</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> broad_histogram_values) {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> broad_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Normal Q-Q Plot, n ="</span>, n</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cauchy_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The Q-Q plot points do not follow the red line closely. The strong departures in the tails show that the sampling distributions are not approximately normal.</p>
+<p>The Q-Q plots do not become consistently linear as (n) increases. This supports the conclusion that the ordinary CLT does not apply to the Cauchy population.</p>
+</section>
+<section id="broad-range-median-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-median-comparison">Broad-Range Median Comparison</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>sample_size_n,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>simulated_median,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"b"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">log =</span> <span class="st">"x"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Simulated median"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Cauchy Sample-Mean Medians"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">h =</span> population_median,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"topright"</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">c</span>(</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Simulated median"</span>,</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Theoretical median"</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>),</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="cn">NA</span>),</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cauchy_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The simulated medians tend to remain near the theoretical median of zero. This shows that the center of the distribution can be stable even though the mean and variance are undefined.</p>
+</section>
+<section id="broad-range-iqr-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="broad-range-iqr-comparison">Broad-Range IQR Comparison</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>sample_size_n,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  broad_diagnostics<span class="sc">$</span>simulated_iqr,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"b"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">log =</span> <span class="st">"x"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Simulated IQR"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Cauchy Sample-Mean IQRs"</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">h =</span> population_iqr,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"topright"</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">c</span>(</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Simulated IQR"</span>,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Theoretical IQR"</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>),</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="cn">NA</span>),</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cauchy_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The simulated IQRs can vary from one sample size to another. Unlike the standard error, the IQR is a useful measure of spread for the Cauchy distribution because it does not depend on a finite variance.</p>
+</section>
+<section id="choosing-the-refinement-interval" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-refinement-interval">Choosing the Refinement Interval</h2>
+<p>The broad results showed that the Cauchy sample means did not become normal as (n) increased. I selected (n = 30) and (n = 50) for the refinement interval to examine the behavior more closely.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>refinement_lower <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>refinement_upper <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>refined_n_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  refinement_lower,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  refinement_upper,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="dv">1</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>refined_n_values</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50</code></pre>
+</div>
+</div>
+</section>
+<section id="fine-grained-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-simulations">Fine-Grained Simulations</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(student_id)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>refined_means <span class="ot">&lt;-</span> <span class="fu">run_simulations</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> refined_n_values,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">reps =</span> reps</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running simulation for n = 30 
+Running simulation for n = 31 
+Running simulation for n = 32 
+Running simulation for n = 33 
+Running simulation for n = 34 
+Running simulation for n = 35 
+Running simulation for n = 36 
+Running simulation for n = 37 
+Running simulation for n = 38 
+Running simulation for n = 39 
+Running simulation for n = 40 
+Running simulation for n = 41 
+Running simulation for n = 42 
+Running simulation for n = 43 
+Running simulation for n = 44 
+Running simulation for n = 45 
+Running simulation for n = 46 
+Running simulation for n = 47 
+Running simulation for n = 48 
+Running simulation for n = 49 
+Running simulation for n = 50 </code></pre>
+</div>
+</div>
+</section>
+<section id="fine-grained-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-diagnostics">Fine-Grained Diagnostics</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>refined_diagnostics <span class="ot">&lt;-</span> <span class="fu">calculate_cauchy_diagnostics</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> refined_means,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> refined_n_values</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Fine-Grained Cauchy Diagnostic Results"</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Fine-Grained Cauchy Diagnostic Results</caption>
+<colgroup>
+<col style="width: 3%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 23%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">simulated_mean</th>
+<th style="text-align: right;">simulated_median</th>
+<th style="text-align: right;">median_error</th>
+<th style="text-align: right;">simulated_iqr</th>
+<th style="text-align: right;">iqr_error</th>
+<th style="text-align: right;">outlier_count</th>
+<th style="text-align: right;">proportion_beyond_absolute_value_10</th>
+<th style="text-align: right;">qq_correlation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.1256</td>
+<td style="text-align: right;">-0.0013</td>
+<td style="text-align: right;">-0.0013</td>
+<td style="text-align: right;">2.0319</td>
+<td style="text-align: right;">0.0319</td>
+<td style="text-align: right;">1557</td>
+<td style="text-align: right;">0.0636</td>
+<td style="text-align: right;">0.1289</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_31</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">-0.6460</td>
+<td style="text-align: right;">-0.0136</td>
+<td style="text-align: right;">-0.0136</td>
+<td style="text-align: right;">1.9650</td>
+<td style="text-align: right;">-0.0350</td>
+<td style="text-align: right;">1552</td>
+<td style="text-align: right;">0.0570</td>
+<td style="text-align: right;">0.3092</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_32</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">-0.2358</td>
+<td style="text-align: right;">0.0111</td>
+<td style="text-align: right;">0.0111</td>
+<td style="text-align: right;">2.0191</td>
+<td style="text-align: right;">0.0191</td>
+<td style="text-align: right;">1563</td>
+<td style="text-align: right;">0.0639</td>
+<td style="text-align: right;">0.2645</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_33</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">2.5544</td>
+<td style="text-align: right;">-0.0162</td>
+<td style="text-align: right;">-0.0162</td>
+<td style="text-align: right;">1.9915</td>
+<td style="text-align: right;">-0.0085</td>
+<td style="text-align: right;">1565</td>
+<td style="text-align: right;">0.0628</td>
+<td style="text-align: right;">0.1036</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_34</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">0.7184</td>
+<td style="text-align: right;">0.0104</td>
+<td style="text-align: right;">0.0104</td>
+<td style="text-align: right;">2.0372</td>
+<td style="text-align: right;">0.0372</td>
+<td style="text-align: right;">1494</td>
+<td style="text-align: right;">0.0612</td>
+<td style="text-align: right;">0.1257</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_35</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">-0.1827</td>
+<td style="text-align: right;">-0.0220</td>
+<td style="text-align: right;">-0.0220</td>
+<td style="text-align: right;">2.0403</td>
+<td style="text-align: right;">0.0403</td>
+<td style="text-align: right;">1481</td>
+<td style="text-align: right;">0.0638</td>
+<td style="text-align: right;">0.2282</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_36</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">1.6135</td>
+<td style="text-align: right;">0.0093</td>
+<td style="text-align: right;">0.0093</td>
+<td style="text-align: right;">2.0169</td>
+<td style="text-align: right;">0.0169</td>
+<td style="text-align: right;">1543</td>
+<td style="text-align: right;">0.0613</td>
+<td style="text-align: right;">0.1713</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_37</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">-1.5185</td>
+<td style="text-align: right;">0.0052</td>
+<td style="text-align: right;">0.0052</td>
+<td style="text-align: right;">2.0402</td>
+<td style="text-align: right;">0.0402</td>
+<td style="text-align: right;">1533</td>
+<td style="text-align: right;">0.0669</td>
+<td style="text-align: right;">0.1045</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_38</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">-1.7441</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">1.9754</td>
+<td style="text-align: right;">-0.0246</td>
+<td style="text-align: right;">1557</td>
+<td style="text-align: right;">0.0590</td>
+<td style="text-align: right;">0.1452</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_39</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">0.7684</td>
+<td style="text-align: right;">-0.0127</td>
+<td style="text-align: right;">-0.0127</td>
+<td style="text-align: right;">2.0215</td>
+<td style="text-align: right;">0.0215</td>
+<td style="text-align: right;">1555</td>
+<td style="text-align: right;">0.0639</td>
+<td style="text-align: right;">0.2114</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_40</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">-0.4432</td>
+<td style="text-align: right;">-0.0148</td>
+<td style="text-align: right;">-0.0148</td>
+<td style="text-align: right;">1.9549</td>
+<td style="text-align: right;">-0.0451</td>
+<td style="text-align: right;">1578</td>
+<td style="text-align: right;">0.0624</td>
+<td style="text-align: right;">0.2015</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_41</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">0.9502</td>
+<td style="text-align: right;">0.0131</td>
+<td style="text-align: right;">0.0131</td>
+<td style="text-align: right;">1.9717</td>
+<td style="text-align: right;">-0.0283</td>
+<td style="text-align: right;">1552</td>
+<td style="text-align: right;">0.0607</td>
+<td style="text-align: right;">0.3094</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_42</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">3.5409</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">2.0352</td>
+<td style="text-align: right;">0.0352</td>
+<td style="text-align: right;">1573</td>
+<td style="text-align: right;">0.0640</td>
+<td style="text-align: right;">0.0957</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_43</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">-7.0426</td>
+<td style="text-align: right;">-0.0074</td>
+<td style="text-align: right;">-0.0074</td>
+<td style="text-align: right;">1.9583</td>
+<td style="text-align: right;">-0.0417</td>
+<td style="text-align: right;">1651</td>
+<td style="text-align: right;">0.0698</td>
+<td style="text-align: right;">0.0668</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_44</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0.5044</td>
+<td style="text-align: right;">-0.0166</td>
+<td style="text-align: right;">-0.0166</td>
+<td style="text-align: right;">1.9882</td>
+<td style="text-align: right;">-0.0118</td>
+<td style="text-align: right;">1603</td>
+<td style="text-align: right;">0.0677</td>
+<td style="text-align: right;">0.2005</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_45</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">-6.2175</td>
+<td style="text-align: right;">0.0196</td>
+<td style="text-align: right;">0.0196</td>
+<td style="text-align: right;">2.0259</td>
+<td style="text-align: right;">0.0259</td>
+<td style="text-align: right;">1542</td>
+<td style="text-align: right;">0.0626</td>
+<td style="text-align: right;">0.0875</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_46</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">4.5814</td>
+<td style="text-align: right;">-0.0135</td>
+<td style="text-align: right;">-0.0135</td>
+<td style="text-align: right;">2.0491</td>
+<td style="text-align: right;">0.0491</td>
+<td style="text-align: right;">1536</td>
+<td style="text-align: right;">0.0622</td>
+<td style="text-align: right;">0.0906</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_47</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">9.8631</td>
+<td style="text-align: right;">-0.0141</td>
+<td style="text-align: right;">-0.0141</td>
+<td style="text-align: right;">1.9962</td>
+<td style="text-align: right;">-0.0038</td>
+<td style="text-align: right;">1563</td>
+<td style="text-align: right;">0.0658</td>
+<td style="text-align: right;">0.0880</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_48</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">0.5479</td>
+<td style="text-align: right;">-0.0100</td>
+<td style="text-align: right;">-0.0100</td>
+<td style="text-align: right;">1.9326</td>
+<td style="text-align: right;">-0.0674</td>
+<td style="text-align: right;">1603</td>
+<td style="text-align: right;">0.0649</td>
+<td style="text-align: right;">0.1606</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_49</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">-1.6226</td>
+<td style="text-align: right;">-0.0191</td>
+<td style="text-align: right;">-0.0191</td>
+<td style="text-align: right;">2.0706</td>
+<td style="text-align: right;">0.0706</td>
+<td style="text-align: right;">1584</td>
+<td style="text-align: right;">0.0658</td>
+<td style="text-align: right;">0.1898</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.2999</td>
+<td style="text-align: right;">-0.0130</td>
+<td style="text-align: right;">-0.0130</td>
+<td style="text-align: right;">2.0770</td>
+<td style="text-align: right;">0.0770</td>
+<td style="text-align: right;">1497</td>
+<td style="text-align: right;">0.0609</td>
+<td style="text-align: right;">0.2285</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="comparing-refined-sample-sizes" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-refined-sample-sizes">Comparing Refined Sample Sizes</h2>
+<p>For the Cauchy population, a normality score cannot show that the CLT has worked because the population does not have a finite mean or variance.</p>
+<p>The score only identifies the least non-normal candidate within the tested interval. It is based on the Q-Q plot correlation, median error, and IQR error.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>qq_rank <span class="ot">&lt;-</span> <span class="fu">rank</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>refined_diagnostics<span class="sc">$</span>qq_correlation,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ties.method =</span> <span class="st">"min"</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>median_error_rank <span class="ot">&lt;-</span> <span class="fu">rank</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(refined_diagnostics<span class="sc">$</span>median_error),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ties.method =</span> <span class="st">"min"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>iqr_error_rank <span class="ot">&lt;-</span> <span class="fu">rank</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(refined_diagnostics<span class="sc">$</span>iqr_error),</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ties.method =</span> <span class="st">"min"</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>refined_diagnostics<span class="sc">$</span>total_score <span class="ot">&lt;-</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics<span class="sc">$</span>qq_rank <span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    refined_diagnostics<span class="sc">$</span>median_error_rank <span class="sc">+</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    refined_diagnostics<span class="sc">$</span>iqr_error_rank</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>least_non_normal_row <span class="ot">&lt;-</span> <span class="fu">which.min</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics<span class="sc">$</span>total_score</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>least_non_normal_n <span class="ot">&lt;-</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  refined_diagnostics<span class="sc">$</span>sample_size_n[</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    least_non_normal_row</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>least_non_normal_n</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>comparison_table <span class="ot">&lt;-</span> refined_diagnostics[</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(refined_diagnostics<span class="sc">$</span>total_score),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  comparison_table,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Comparison of Refined Cauchy Sample Sizes"</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Comparison of Refined Cauchy Sample Sizes</caption>
+<colgroup>
+<col style="width: 2%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 17%">
+<col style="width: 7%">
+<col style="width: 3%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">sample_size_n</th>
+<th style="text-align: right;">simulated_mean</th>
+<th style="text-align: right;">simulated_median</th>
+<th style="text-align: right;">median_error</th>
+<th style="text-align: right;">simulated_iqr</th>
+<th style="text-align: right;">iqr_error</th>
+<th style="text-align: right;">outlier_count</th>
+<th style="text-align: right;">proportion_beyond_absolute_value_10</th>
+<th style="text-align: right;">qq_correlation</th>
+<th style="text-align: right;">qq_rank</th>
+<th style="text-align: right;">median_error_rank</th>
+<th style="text-align: right;">iqr_error_rank</th>
+<th style="text-align: right;">total_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">n_32</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">-0.2358</td>
+<td style="text-align: right;">0.0111</td>
+<td style="text-align: right;">0.0111</td>
+<td style="text-align: right;">2.0191</td>
+<td style="text-align: right;">0.0191</td>
+<td style="text-align: right;">1563</td>
+<td style="text-align: right;">0.0639</td>
+<td style="text-align: right;">0.2645</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_36</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">1.6135</td>
+<td style="text-align: right;">0.0093</td>
+<td style="text-align: right;">0.0093</td>
+<td style="text-align: right;">2.0169</td>
+<td style="text-align: right;">0.0169</td>
+<td style="text-align: right;">1543</td>
+<td style="text-align: right;">0.0613</td>
+<td style="text-align: right;">0.1713</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_38</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">-1.7441</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">0.0020</td>
+<td style="text-align: right;">1.9754</td>
+<td style="text-align: right;">-0.0246</td>
+<td style="text-align: right;">1557</td>
+<td style="text-align: right;">0.0590</td>
+<td style="text-align: right;">0.1452</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_39</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">0.7684</td>
+<td style="text-align: right;">-0.0127</td>
+<td style="text-align: right;">-0.0127</td>
+<td style="text-align: right;">2.0215</td>
+<td style="text-align: right;">0.0215</td>
+<td style="text-align: right;">1555</td>
+<td style="text-align: right;">0.0639</td>
+<td style="text-align: right;">0.2114</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_41</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">0.9502</td>
+<td style="text-align: right;">0.0131</td>
+<td style="text-align: right;">0.0131</td>
+<td style="text-align: right;">1.9717</td>
+<td style="text-align: right;">-0.0283</td>
+<td style="text-align: right;">1552</td>
+<td style="text-align: right;">0.0607</td>
+<td style="text-align: right;">0.3094</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_30</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.1256</td>
+<td style="text-align: right;">-0.0013</td>
+<td style="text-align: right;">-0.0013</td>
+<td style="text-align: right;">2.0319</td>
+<td style="text-align: right;">0.0319</td>
+<td style="text-align: right;">1557</td>
+<td style="text-align: right;">0.0636</td>
+<td style="text-align: right;">0.1289</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_31</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">-0.6460</td>
+<td style="text-align: right;">-0.0136</td>
+<td style="text-align: right;">-0.0136</td>
+<td style="text-align: right;">1.9650</td>
+<td style="text-align: right;">-0.0350</td>
+<td style="text-align: right;">1552</td>
+<td style="text-align: right;">0.0570</td>
+<td style="text-align: right;">0.3092</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_44</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0.5044</td>
+<td style="text-align: right;">-0.0166</td>
+<td style="text-align: right;">-0.0166</td>
+<td style="text-align: right;">1.9882</td>
+<td style="text-align: right;">-0.0118</td>
+<td style="text-align: right;">1603</td>
+<td style="text-align: right;">0.0677</td>
+<td style="text-align: right;">0.2005</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_37</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">-1.5185</td>
+<td style="text-align: right;">0.0052</td>
+<td style="text-align: right;">0.0052</td>
+<td style="text-align: right;">2.0402</td>
+<td style="text-align: right;">0.0402</td>
+<td style="text-align: right;">1533</td>
+<td style="text-align: right;">0.0669</td>
+<td style="text-align: right;">0.1045</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_42</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">3.5409</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">0.0053</td>
+<td style="text-align: right;">2.0352</td>
+<td style="text-align: right;">0.0352</td>
+<td style="text-align: right;">1573</td>
+<td style="text-align: right;">0.0640</td>
+<td style="text-align: right;">0.0957</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_33</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">2.5544</td>
+<td style="text-align: right;">-0.0162</td>
+<td style="text-align: right;">-0.0162</td>
+<td style="text-align: right;">1.9915</td>
+<td style="text-align: right;">-0.0085</td>
+<td style="text-align: right;">1565</td>
+<td style="text-align: right;">0.0628</td>
+<td style="text-align: right;">0.1036</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_34</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">0.7184</td>
+<td style="text-align: right;">0.0104</td>
+<td style="text-align: right;">0.0104</td>
+<td style="text-align: right;">2.0372</td>
+<td style="text-align: right;">0.0372</td>
+<td style="text-align: right;">1494</td>
+<td style="text-align: right;">0.0612</td>
+<td style="text-align: right;">0.1257</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_47</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">9.8631</td>
+<td style="text-align: right;">-0.0141</td>
+<td style="text-align: right;">-0.0141</td>
+<td style="text-align: right;">1.9962</td>
+<td style="text-align: right;">-0.0038</td>
+<td style="text-align: right;">1563</td>
+<td style="text-align: right;">0.0658</td>
+<td style="text-align: right;">0.0880</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.2999</td>
+<td style="text-align: right;">-0.0130</td>
+<td style="text-align: right;">-0.0130</td>
+<td style="text-align: right;">2.0770</td>
+<td style="text-align: right;">0.0770</td>
+<td style="text-align: right;">1497</td>
+<td style="text-align: right;">0.0609</td>
+<td style="text-align: right;">0.2285</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_48</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">0.5479</td>
+<td style="text-align: right;">-0.0100</td>
+<td style="text-align: right;">-0.0100</td>
+<td style="text-align: right;">1.9326</td>
+<td style="text-align: right;">-0.0674</td>
+<td style="text-align: right;">1603</td>
+<td style="text-align: right;">0.0649</td>
+<td style="text-align: right;">0.1606</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_40</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">-0.4432</td>
+<td style="text-align: right;">-0.0148</td>
+<td style="text-align: right;">-0.0148</td>
+<td style="text-align: right;">1.9549</td>
+<td style="text-align: right;">-0.0451</td>
+<td style="text-align: right;">1578</td>
+<td style="text-align: right;">0.0624</td>
+<td style="text-align: right;">0.2015</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_35</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">-0.1827</td>
+<td style="text-align: right;">-0.0220</td>
+<td style="text-align: right;">-0.0220</td>
+<td style="text-align: right;">2.0403</td>
+<td style="text-align: right;">0.0403</td>
+<td style="text-align: right;">1481</td>
+<td style="text-align: right;">0.0638</td>
+<td style="text-align: right;">0.2282</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_43</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">-7.0426</td>
+<td style="text-align: right;">-0.0074</td>
+<td style="text-align: right;">-0.0074</td>
+<td style="text-align: right;">1.9583</td>
+<td style="text-align: right;">-0.0417</td>
+<td style="text-align: right;">1651</td>
+<td style="text-align: right;">0.0698</td>
+<td style="text-align: right;">0.0668</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_45</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">-6.2175</td>
+<td style="text-align: right;">0.0196</td>
+<td style="text-align: right;">0.0196</td>
+<td style="text-align: right;">2.0259</td>
+<td style="text-align: right;">0.0259</td>
+<td style="text-align: right;">1542</td>
+<td style="text-align: right;">0.0626</td>
+<td style="text-align: right;">0.0875</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n_49</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">-1.6226</td>
+<td style="text-align: right;">-0.0191</td>
+<td style="text-align: right;">-0.0191</td>
+<td style="text-align: right;">2.0706</td>
+<td style="text-align: right;">0.0706</td>
+<td style="text-align: right;">1584</td>
+<td style="text-align: right;">0.0658</td>
+<td style="text-align: right;">0.1898</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">n_46</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">4.5814</td>
+<td style="text-align: right;">-0.0135</td>
+<td style="text-align: right;">-0.0135</td>
+<td style="text-align: right;">2.0491</td>
+<td style="text-align: right;">0.0491</td>
+<td style="text-align: right;">1536</td>
+<td style="text-align: right;">0.0622</td>
+<td style="text-align: right;">0.0906</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">49</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="saving-the-refined-sample-means" class="level2">
+<h2 class="anchored" data-anchor-id="saving-the-refined-sample-means">Saving the Refined Sample Means</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>refined_means_long <span class="ot">&lt;-</span> <span class="fu">convert_to_long_format</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">means_list =</span> refined_means,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_values =</span> refined_n_values,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">range_label =</span> <span class="st">"refined"</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  refined_means_long,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cauchy_refined_sample_means.csv"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="fine-grained-histograms" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-histograms">Fine-Grained Histograms</h2>
+<p>The following plots show the lower refinement bound, the least non-normal sample size, and the upper refinement bound.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>refined_plot_values <span class="ot">&lt;-</span> <span class="fu">sort</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>      refinement_lower,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      least_non_normal_n,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      refinement_upper</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> refined_plot_values) {</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> refined_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  central_means <span class="ot">&lt;-</span> means[</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    means <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">10</span> <span class="sc">&amp;</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>      means <span class="sc">&lt;=</span> <span class="dv">10</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    central_means,</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="dv">40</span>,</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>),</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Central Histogram, n ="</span>, n</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Sample mean"</span>,</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">border =</span> <span class="st">"white"</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dcauchy</span>(</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>      x,</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">location =</span> <span class="dv">0</span>,</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">scale =</span> <span class="dv">1</span></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">/</span></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>      (</span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pcauchy</span>(<span class="dv">10</span>) <span class="sc">-</span></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>          <span class="fu">pcauchy</span>(<span class="sc">-</span><span class="dv">10</span>)</span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">from =</span> <span class="sc">-</span><span class="dv">10</span>,</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">to =</span> <span class="dv">10</span>,</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cauchy_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The central histograms make the main shape easier to see, but they do not remove the Cauchy distribution’s heavy-tail problem. The full distributions still contain extreme observations outside the displayed range.</p>
+</section>
+<section id="fine-grained-normal-q-q-plots" class="level2">
+<h2 class="anchored" data-anchor-id="fine-grained-normal-q-q-plots">Fine-Grained Normal Q-Q Plots</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> refined_plot_values) {</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> refined_means[[<span class="fu">paste0</span>(<span class="st">"n_"</span>, n)]]</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Normal Q-Q Plot, n ="</span>, n</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    means,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cauchy_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Q-Q plots continue to show strong departures from the red line, especially in the tails. Increasing (n) does not make the points consistently linear.</p>
+</section>
+<section id="conclusion-about-normality" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-about-normality">Conclusion About Normality</h2>
+<p>The Cauchy population does not produce a normal sampling distribution of the mean for the tested sample sizes.</p>
+<p>The sample means remain heavy-tailed, and extreme values continue to occur even when (n) is large. The histograms are difficult to view on the full scale because a few observations can stretch the horizontal axis. The central histograms make the main shape easier to see, but the heavy tails are still present.</p>
+<p>The normal Q-Q plots also show strong departures from the red line. The points do not become consistently linear as (n) increases.</p>
+<p>The simulated medians tend to remain close to zero, and the IQR is more stable than the mean or standard deviation. However, the mean and variance of the Cauchy distribution are undefined, so there is no theoretical standard error for the sample mean.</p>
+<p>The value (n =) 32 had the strongest numerical comparison within the refinement interval, but it should not be considered normal enough. It was only the least non-normal candidate among the values tested.</p>
+</section>
+<section id="clt-assumptions-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="clt-assumptions-and-limitations">CLT Assumptions and Limitations</h2>
+<p>The Cauchy observations are independent and identically distributed, but the population does not have a finite mean or finite variance.</p>
+<p>Because the finite-variance condition is not satisfied, the usual Central Limit Theorem does not apply. Increasing (n) does not make the sampling distribution of the mean approximately normal.</p>
+<p>This shows why the CLT assumptions are important. The simulation is not failing because of a coding error. Instead, it demonstrates that a population with extremely heavy tails can prevent the sample mean from becoming normally distributed.</p>
+<p>The median and IQR are more useful than the mean and standard deviation for describing the Cauchy population because they are less affected by extreme observations.</p>
+</section>
+<section id="final-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="final-conclusion">Final Conclusion</h2>
+<p>The Cauchy distribution did not produce a normal sampling distribution of the mean for any of the tested sample sizes.</p>
+<p>The population has no finite mean or variance, so the ordinary CLT does not apply. The sample means continued to show heavy tails, extreme outliers, and non-linear Q-Q plots as (n) increased.</p>
+<p>Although (n =) 32 had the strongest numerical comparison within the refinement interval, it was not normal enough in the usual CLT sense. This result demonstrates why finite mean and finite variance are necessary conditions for the Central Limit Theorem.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
